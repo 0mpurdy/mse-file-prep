@@ -27,7 +27,7 @@ public class Cli {
         Scanner sc = new Scanner(System.in);
 
         while (mainMenuChoice != 0) {
-            MenuPrinter.printMenu(MenuPrinter.otherMainMenuOptions);
+            MenuPrinter.printMenu(MenuPrinter.mainMenuOptions);
 
             mainMenuChoice = sc.nextInt();
             sc.nextLine();
