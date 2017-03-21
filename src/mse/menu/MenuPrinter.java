@@ -12,18 +12,22 @@ public class MenuPrinter {
     public static final String[] mainMenuOptions = {
             "Close",
             "Prepare all files",
-            "Prepare single author",
             "Create all indexes",
-            "Create single author index",
-            "Create super index",
-            "Check author index",
-            "Check all author indexes",
+            "Create all serial files",
+            "Test",
             "Other"
     };
 
     public static final String[] otherMainMenuOptions = {
             "Back",
-            "Benchmark",
+            "Prepare single author",
+            "Create single author index",
+            "Create super index",
+            "Check author index",
+            "Check all author indexes",
+            "Create serial Bibles",
+            "Create serial Hymns",
+            "Benchmark"
     };
 
     public static void printMenu(ArrayList<String> menu) {
@@ -36,6 +40,8 @@ public class MenuPrinter {
     }
 
     public static void printMenu(String[] menu) {
+
+        System.out.println();
 
         int i = 0;
         for (String option : menu) {

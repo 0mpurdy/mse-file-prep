@@ -1,8 +1,7 @@
 package mse.helpers;
 
 import mse.common.Author;
-import mse.common.Config;
-import mse.data.PreparePlatform;
+import mse.olddata.PreparePlatform;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package mse.common;
 
-import mse.data.FileConstants;
-import mse.data.PreparePlatform;
+import mse.olddata.FileConstants;
+import mse.olddata.PreparePlatform;
 
 import java.io.File;
 

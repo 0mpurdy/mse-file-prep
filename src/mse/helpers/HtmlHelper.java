@@ -1,8 +1,7 @@
 package mse.helpers;
 
-import mse.data.AuthorPrepareCache;
-import mse.data.BibleBook;
-import mse.data.BiblePrepareCache;
+import mse.olddata.BibleBook;
+import mse.olddata.BiblePrepareCache;
 
 import java.io.PrintWriter;
 
