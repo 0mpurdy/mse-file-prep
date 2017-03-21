@@ -1,4 +1,4 @@
-package mse.data;
+package mse.olddata;
 
 import mse.common.Author;
 import mse.processors.prepare.MinistryPage;

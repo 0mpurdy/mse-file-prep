@@ -1,4 +1,4 @@
-package mse.data;
+package mse.olddata;
 
 import mse.common.Author;
 import mse.helpers.FileHelper;
@@ -38,11 +38,15 @@ public enum PreparePlatform {
     }
 
     public String getSourcePath() {
-        return ".." + File.separator + "MSE-Res-Lite" + File.separator + "res" + File.separator + "source" + File.separator;
+        return ".." + File.separator + "MSE-Res-Lite" + File.separator + "res" + File.separator + "source";
     }
 
     public String getTargetPath() {
         return res + File.separator + targetFolder;
+    }
+
+    public String getSerialFolder() {
+        return res + File.separator + "serial";
     }
 
 //    public String getTargetFolder() {

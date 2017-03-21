@@ -1,11 +1,11 @@
 package mse.processors;
 
-import mse.data.BibleBook;
-import mse.data.HymnBook;
+import mse.olddata.BibleBook;
+import mse.olddata.HymnBook;
 import mse.common.Author;
 import mse.common.AuthorIndex;
 import mse.common.Config;
-import mse.data.PreparePlatform;
+import mse.olddata.PreparePlatform;
 import mse.helpers.FileHelper;
 
 import java.io.*;

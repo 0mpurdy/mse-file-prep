@@ -1,6 +1,6 @@
 package mse.common;
 
-import mse.data.PreparePlatform;
+import mse.olddata.PreparePlatform;
 import mse.helpers.FileHelper;
 
 import java.io.*;

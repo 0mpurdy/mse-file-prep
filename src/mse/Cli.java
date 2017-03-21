@@ -1,7 +1,6 @@
 package mse;
 
 import mse.common.Config;
-import mse.data.PreparePlatform;
 import mse.menu.MenuAction;
 import mse.menu.MenuPrinter;
 

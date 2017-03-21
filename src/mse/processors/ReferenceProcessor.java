@@ -3,7 +3,7 @@ package mse.processors;
 import mse.common.Author;
 import mse.common.AuthorIndex;
 import mse.common.Config;
-import mse.data.PreparePlatform;
+import mse.olddata.PreparePlatform;
 import mse.helpers.FileHelper;
 
 /**

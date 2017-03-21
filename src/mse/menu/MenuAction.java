@@ -3,8 +3,15 @@ package mse.menu;
 import mse.common.Author;
 import mse.common.AuthorIndex;
 import mse.common.Config;
-import mse.data.PreparePlatform;
+import mse.olddata.PreparePlatform;
+import mse.helpers.Serializer;
 import mse.processors.*;
+import mse.data.bible.Bible;
+import mse.reader.bible.BibleTextReader;
+import mse.data.hymn.HymnBook;
+import mse.reader.hymn.HymnTextReader;
+import mse.data.ministry.MinistryAuthor;
+import mse.reader.ministry.MinistryTextReader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,30 +33,89 @@ public class MenuAction {
                 prepareAllFiles(sc, cfg);
                 break;
             case 2:
-                prepareSingleAuthor(sc, cfg);
-                break;
-            case 3:
                 createAllIndexes(sc, cfg);
                 break;
+            case 3:
+                createAllSerialFiles(sc);
+                System.out.println("\rSerialized all files");
+                break;
             case 4:
-                createSingleAuthorIndex(sc, cfg);
+                System.out.println("Test");
+                PreparePlatform platform = chooseSystem(sc);
+                MinistryTextReader mtr = new MinistryTextReader();
+                ArrayList<MinistryAuthor> authors = mtr.readAllMinistryAuthors(platform.getSourcePath());
+                System.out.println("\rWriting authors");
+                for (MinistryAuthor author : authors) {
+                    Serializer.writeAuthor(platform.getSerialFolder(), author);
+                }
                 break;
             case 5:
-                createSuperIndex(sc, cfg);
-                break;
-            case 6:
-                checkAuthorIndex(sc);
-                break;
-            case 7:
-                checkAllIndexes(sc);
-                break;
-            case 8:
                 MenuPrinter.printMenu(MenuPrinter.otherMainMenuOptions);
-                doOtherMenuOption(cfg, sc.nextInt());
+                doOtherMenuOption(cfg, sc.nextInt(), sc);
                 break;
             default:
                 System.out.println("Invalid choice");
         }
+    }
+
+    private static void createAllSerialFiles(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+
+        serializeAllHymns(platform);
+        serializeAllBibles(platform);
+    }
+
+    private static void serializeAllHymns(PreparePlatform platform) {
+        HymnTextReader htr = new HymnTextReader();
+        ArrayList<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
+        for (HymnBook hymnBook : hymnBooks) {
+            Serializer.writeHymnBook(platform.getSerialFolder() + File.separator + "hymns", hymnBook);
+        }
+    }
+
+    private static void serializeAllBibles(PreparePlatform platform) {
+        BibleTextReader btr = new BibleTextReader();
+        ArrayList<Bible> bibles = btr.readAll(platform.getSourcePath());
+        for (Bible bible : bibles) {
+            Serializer.writeBible(platform.getSerialFolder(), bible);
+        }
+    }
+
+    private static void readHymnText(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        HymnTextReader hymnTextReader = new HymnTextReader();
+        HymnBook hymnBook = hymnTextReader.readHymnBook(platform.getSourcePath() + File.separator + "hymns", "hymns1962");
+        Serializer.writeHymnBook(platform.getSerialFolder() + File.separator + "hymns", hymnBook);
+        System.out.println("Read hymns text");
+    }
+
+    private static void readSerialHymn(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        HymnBook hymnBook = Serializer.readHymnBook(platform.getSerialFolder() + File.separator + "hymns", "hymns1962.ser");
+        System.out.println("Read hymns text");
+    }
+
+    private static void readSerialJndBible(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        Bible jndVersion = Serializer.readBible(platform.getSerialFolder(), "JND-Bible.ser");
+        System.out.println("Read JND");
+    }
+
+    private static void serializeAndReadMiscMinistry(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        MinistryTextReader mtr = new MinistryTextReader();
+        MinistryAuthor miscMinistry = mtr.readMinistryAuthor(platform.getSourcePath() + File.separator + "misc", "Misc", "misc");
+        Serializer.writeAuthor(platform.getSerialFolder(), miscMinistry);
+        MinistryAuthor fromFile = Serializer.readAuthor(platform.getSerialFolder(), "misc.ser");
+        System.out.println("Read Misc Ministry");
+    }
+
+    private static void readJndBibleText(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        BibleTextReader bibleTextReader = new BibleTextReader();
+        Bible jndBible = bibleTextReader.readVersion("JND Bible", "JND", "jnd", "bible", platform.getSourcePath() + File.separator + "bible");
+        Serializer.writeBible(platform.getSerialFolder(), jndBible);
+        System.out.println("Created JND");
     }
 
     private static void prepareAllFiles(Scanner sc, Config cfg) {
@@ -198,11 +264,33 @@ public class MenuAction {
         }
     }
 
-    private static void doOtherMenuOption(Config cfg, int option) {
+    private static void doOtherMenuOption(Config cfg, int option, Scanner sc) {
         switch (option) {
             case 0:
                 return;
             case 1:
+                prepareSingleAuthor(sc, cfg);
+                break;
+            case 2:
+                createSingleAuthorIndex(sc, cfg);
+                break;
+            case 3:
+                createSuperIndex(sc, cfg);
+                break;
+            case 4:
+                checkAuthorIndex(sc);
+                break;
+            case 5:
+                checkAllIndexes(sc);
+                break;
+            case 6:
+                serializeAllBibles(chooseSystem(sc));
+                break;
+            case 7:
+                serializeAllHymns(chooseSystem(sc));
+                System.out.print("\rFinished reading all hymns\n");
+                break;
+            case 8:
                 // benchmark
                 System.out.println("Benchmarking ...\n\n");
                 new Benchmark().run();
