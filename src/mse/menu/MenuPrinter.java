@@ -15,7 +15,8 @@ public class MenuPrinter {
             "Create all indexes",
             "Create all serial files",
             "Test",
-            "Other"
+            "Other",
+            "Debug"
     };
 
     public static final String[] otherMainMenuOptions = {
@@ -26,7 +27,12 @@ public class MenuPrinter {
             "Check author index",
             "Check all author indexes",
             "Create serial Bibles",
-            "Create serial Hymns",
+            "Create serial Hymns"
+    };
+
+    public static final String[] debugMenuOptions = {
+            "Back",
+            "Read single author text",
             "Benchmark"
     };
 

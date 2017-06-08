@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FileHelper {
 
     public static String checkSourceFolder(PreparePlatform platform, String folder) throws IOException {
-        String pathName = platform.getSourcePath() + folder + File.separator;
+        String pathName = platform.getSourcePath() + File.separator + folder + File.separator;
         File f = new File(pathName);
         System.out.print("\rReading " + folder + " from " + f.getCanonicalPath());
         if (f.exists() || f.mkdirs()) {

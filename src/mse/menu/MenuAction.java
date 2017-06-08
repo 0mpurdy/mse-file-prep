@@ -48,10 +48,15 @@ public class MenuAction {
                 for (MinistryAuthor author : authors) {
                     Serializer.writeAuthor(platform.getSerialFolder(), author);
                 }
+//                Serializer.readAuthor(platform.getSerialFolder(), )
                 break;
             case 5:
                 MenuPrinter.printMenu(MenuPrinter.otherMainMenuOptions);
                 doOtherMenuOption(cfg, sc.nextInt(), sc);
+                break;
+            case 6:
+                MenuPrinter.printMenu(MenuPrinter.debugMenuOptions);
+                doDebugMenuOption(cfg, sc.nextInt(), sc);
                 break;
             default:
                 System.out.println("Invalid choice");
@@ -108,6 +113,11 @@ public class MenuAction {
         Serializer.writeAuthor(platform.getSerialFolder(), miscMinistry);
         MinistryAuthor fromFile = Serializer.readAuthor(platform.getSerialFolder(), "misc.ser");
         System.out.println("Read Misc Ministry");
+    }
+
+    private static void readSingleSerialMinistryAuthor(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+        MinistryAuthor fromFile = Serializer.readAuthor(platform.getSerialFolder(), "misc.ser");
     }
 
     private static void readJndBibleText(Scanner sc) {
@@ -291,6 +301,24 @@ public class MenuAction {
                 System.out.print("\rFinished reading all hymns\n");
                 break;
             case 8:
+                // benchmark
+                System.out.println("Benchmarking ...\n\n");
+                new Benchmark().run();
+                break;
+            default:
+                System.out.println("Invalid choice");
+        }
+    }
+
+    private static void doDebugMenuOption(Config cfg, int option, Scanner sc) {
+        switch (option) {
+            case 0:
+                return;
+            case 1:
+                // Read single author text
+                readSingleSerialMinistryAuthor(sc);
+                break;
+            case 2:
                 // benchmark
                 System.out.println("Benchmarking ...\n\n");
                 new Benchmark().run();
