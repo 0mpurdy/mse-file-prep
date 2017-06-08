@@ -9,6 +9,23 @@ public enum Author {
 
     // region authors
 
+    // Some not searchable
+//    BIBLE(0, "Bible", "Bible", "bible", 66, false, true, true),
+//    HYMNS(1, "Hymns", "Hymns", "hymns", 5, false, true, true),
+//    TUNES(2, "Tunes", "Hymn Tunes", "tunes", 100, false, false, true),
+//    JND(3, "JND", "J.N.Darby", "jnd", 52, true, true, true),
+//    JBS(4, "JBS", "J.B.Stoney", "jbs", 17, true, true, false),
+//    CHM(5, "CHM", "C.H.Mackintosh", "chm", 18, true, false, false),
+//    FER(6, "FER", "F.E.Raven", "fer", 21, true, true, false),
+//    CAC(7, "CAC", "C.A.Coates", "cac", 37, true, true, false),
+//    JT(8, "JT", "J.Taylor Snr", "jt", 103, true, false, false),
+//    GRC(9, "GRC", "G.R.Cowell", "grc", 88, true, false, false),
+//    AJG(10, "AJG", "A.J.Gardiner", "ajg", 11, true, false, false),
+//    SMC(11, "SMC", "S.McCallum", "smc", 10, true, false, false),
+//    WJH(12, "WJH", "W.J.House", "wjh", 23, true, false, false),
+//    Misc(13, "Misc", "Various Authors", "misc", 26, true, false, false);
+
+    // all searchable (apart from tunes)
     BIBLE(0, "Bible", "Bible", "bible", 66, false, true, true),
     HYMNS(1, "Hymns", "Hymns", "hymns", 5, false, true, true),
     TUNES(2, "Tunes", "Hymn Tunes", "tunes", 100, false, false, true),
@@ -17,12 +34,12 @@ public enum Author {
     CHM(5, "CHM", "C.H.Mackintosh", "chm", 18, true, false, false),
     FER(6, "FER", "F.E.Raven", "fer", 21, true, true, false),
     CAC(7, "CAC", "C.A.Coates", "cac", 37, true, true, false),
-    JT(8, "JT", "J.Taylor Snr", "jt", 103, true, false, false),
-    GRC(9, "GRC", "G.R.Cowell", "grc", 88, true, false, false),
-    AJG(10, "AJG", "A.J.Gardiner", "ajg", 11, true, false, false),
-    SMC(11, "SMC", "S.McCallum", "smc", 10, true, false, false),
-    WJH(12, "WJH", "W.J.House", "wjh", 23, true, false, false),
-    Misc(13, "Misc", "Various Authors", "misc", 26, true, false, false);
+    JT(8, "JT", "J.Taylor Snr", "jt", 103, true, true, false),
+    GRC(9, "GRC", "G.R.Cowell", "grc", 88, true, true, false),
+    AJG(10, "AJG", "A.J.Gardiner", "ajg", 11, true, true, false),
+    SMC(11, "SMC", "S.McCallum", "smc", 10, true, true, false),
+    WJH(12, "WJH", "W.J.House", "wjh", 23, true, true, false),
+    Misc(13, "Misc", "Various Authors", "misc", 26, true, true, false);
 
     // endregion
 
@@ -61,7 +78,7 @@ public enum Author {
      * @return
      */
     public String getPreparePath(PreparePlatform platform) {
-        return platform.getSourcePath() + getCode().toLowerCase() + File.separator;
+        return platform.getSourcePath() + File.separator + getCode().toLowerCase() + File.separator;
     }
 
     /**
@@ -72,7 +89,7 @@ public enum Author {
      */
     public String getIndexPreparePath(PreparePlatform platform) {
         if (this.equals(BIBLE)) return platform.getTargetPath() + File.separator + FileConstants.BIBLE_TEXT_OUTPUT_FOLDER + File.separator;
-        return platform.getSourcePath() + getCode().toLowerCase() + File.separator;
+        return platform.getSourcePath() + File.separator + getCode().toLowerCase() + File.separator;
     }
 
     public String getPrepareSourceName(int volNumber) {
