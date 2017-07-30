@@ -2,3 +2,9 @@ out/
 res/
 .idea/workspace.xml
 .DS_Store
+ 
+\.idea/artifacts/*
+ 
+src/META-INF/
+
+**/*.md.html
