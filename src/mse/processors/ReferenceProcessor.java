@@ -1,10 +1,13 @@
 package mse.processors;
 
-import mse.common.Author;
-import mse.common.AuthorIndex;
-import mse.common.Config;
+import mse.common.log.ILogger;
+import mse.data.author.Author;
+import mse.data.author.AuthorIndex;
+import mse.common.config.Config;
 import mse.olddata.PreparePlatform;
 import mse.helpers.FileHelper;
+
+import java.io.File;
 
 /**
  * Created by mjp on 10/09/2015.
@@ -18,10 +21,10 @@ public class ReferenceProcessor extends Thread {
     private long totalTokenCount = 0;
     private PreparePlatform platform;
 
-    public ReferenceProcessor(ReferenceQueue tokenQueue, PreparePlatform platform) {
+    public ReferenceProcessor(ReferenceQueue tokenQueue, PreparePlatform platform, ILogger logger) {
         this.tokenQueue = tokenQueue;
         this.author = tokenQueue.getAuthor();
-        this.authorIndex = new AuthorIndex(author);
+        this.authorIndex = new AuthorIndex(author, logger);
         this.cfg = tokenQueue.getConfig();
         this.platform = platform;
     }
@@ -40,7 +43,7 @@ public class ReferenceProcessor extends Thread {
         authorIndex.cleanIndexArrays();
 
         // output index
-        authorIndex.writeIndex(FileHelper.getIndexTargetPath(author, platform));
+        authorIndex.writeIndex(FileHelper.getIndexFile(author, File.separator));
 
         System.out.println("Total token count: " + totalTokenCount);
 

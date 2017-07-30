@@ -1,6 +1,6 @@
 package mse;
 
-import mse.common.Config;
+import mse.common.config.Config;
 
 public class Main {
 

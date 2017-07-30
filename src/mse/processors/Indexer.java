@@ -2,9 +2,9 @@ package mse.processors;
 
 import mse.olddata.BibleBook;
 import mse.olddata.HymnBook;
-import mse.common.Author;
-import mse.common.AuthorIndex;
-import mse.common.Config;
+import mse.data.author.Author;
+import mse.data.author.AuthorIndex;
+import mse.common.config.Config;
 import mse.olddata.PreparePlatform;
 import mse.helpers.FileHelper;
 

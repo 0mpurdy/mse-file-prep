@@ -1,6 +1,6 @@
 package mse.olddata;
 
-import mse.common.Author;
+import mse.data.author.Author;
 import mse.helpers.FileHelper;
 
 import java.io.File;
@@ -57,9 +57,14 @@ public enum PreparePlatform {
         return stylesLink;
     }
 
+    /**
+     * Get the prefix of a link to the author
+     * @param author Author to link to
+     * @return String link prefix
+     */
     public String getLinkPrefix(Author author) {
         String link = "";
-        if (fullLink) link = FileHelper.getTargetPath(author, this);
+        if (fullLink) link = FileHelper.getTargetFolder(author, File.separator);
         if (!author.isAsset())
             return linkPrefix + link;
         return link;

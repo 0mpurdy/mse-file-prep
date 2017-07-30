@@ -1,7 +1,7 @@
 package mse.processors;
 
-import mse.common.Author;
-import mse.common.Config;
+import mse.data.author.Author;
+import mse.common.config.Config;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

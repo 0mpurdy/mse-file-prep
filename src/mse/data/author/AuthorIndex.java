@@ -1,6 +1,7 @@
-package mse.common;
+package mse.data.author;
 
-import mse.olddata.PreparePlatform;
+import mse.common.log.ILogger;
+import mse.common.log.LogLevel;
 import mse.helpers.FileHelper;
 
 import java.io.*;
@@ -11,7 +12,9 @@ import java.util.Map;
 /**
  * Created by mj_pu_000 on 09/09/2015.
  */
-public class AuthorIndex implements Serializable {
+public class AuthorIndex {
+
+    private ILogger logger;
 
     private Author author;
     private HashMap<String, Integer> tokenCountMap;
@@ -26,12 +29,15 @@ public class AuthorIndex implements Serializable {
     short[] newReferences;
     int count;
 
-    public AuthorIndex(Author author) {
+    public AuthorIndex(Author author, ILogger logger) {
         this.author = author;
         tokenCountMap = new HashMap<>();
-        lastRefMap = new HashMap<>();
-        nextReferenceIndex = new HashMap<>();
         references = new HashMap<>();
+        this.logger = logger;
+    }
+
+    public Author getAuthor() {
+        return author;
     }
 
     public String getAuthorName() {
@@ -42,7 +48,21 @@ public class AuthorIndex implements Serializable {
         return tokenCountMap;
     }
 
-    public HashMap<String, short[]> getReferencesMap() { return references; }
+    public int getTokenCount(String token) {
+        if (tokenCountMap.get(token) != null) {
+            return tokenCountMap.get(token);
+        } else {
+            return 0;
+        }
+    }
+
+    public HashMap<String, short[]> getReferencesMap() {
+        return references;
+    }
+
+    public short[] getReferences(String key) {
+        return references.get(key);
+    }
 
     public void incrementTokenCount(String token, short volumeNumber, short pageNumber) {
         count = -1;
@@ -132,14 +152,6 @@ public class AuthorIndex implements Serializable {
         tokenCountMap.put(token, count);
     }
 
-    public int getTokenCount(String token) {
-        if (tokenCountMap.get(token) != null) {
-            return tokenCountMap.get(token);
-        } else {
-            return 0;
-        }
-    }
-
     public void cleanIndexArrays() {
 
         HashMap<String, short[]> newReferencesMap = new HashMap<>();
@@ -163,33 +175,30 @@ public class AuthorIndex implements Serializable {
         references = newReferencesMap;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
+    /**
+     * Read the author index from a file
+     * @param resDir Resources directory that contains the AuthorIndex
+     */
+    public void loadIndex(String resDir) {
 
-    public short[] getReferences(String key) {
-        return references.get(key);
-    }
-
-    public void loadIndex(PreparePlatform platform) {
+        String indexFilePath = resDir + File.separator + FileHelper.getIndexFile(author, File.separator);
 
         // try to load the index of the current author
         try {
-            InputStream inStream = new FileInputStream(FileHelper.getIndexTargetPath(author, platform));
+            InputStream inStream = new FileInputStream(indexFilePath);
             BufferedInputStream bInStream = new BufferedInputStream(inStream);
             ObjectInput input = new ObjectInputStream(bInStream);
             this.tokenCountMap = (HashMap<String, Integer>) input.readObject();
             this.references = (HashMap<String, short[]>) input.readObject();
         } catch (FileNotFoundException fnfe) {
-            System.out.println("Could not file find file: " + FileHelper.getIndexTargetPath(author, platform));
+            System.out.println("Could not file find file: " + indexFilePath);
         } catch (IOException ioe) {
-            System.out.println("Error loading from: " + FileHelper.getIndexTargetPath(author, platform));
+            System.out.println("Error loading from: " + indexFilePath);
         } catch (ClassCastException cce) {
             System.out.println("Error casting class when loading new index");
         } catch (ClassNotFoundException cnfe) {
             System.out.println("Class not found when loading new index");
         }
-
     }
 
     public void writeIndex(String location) {

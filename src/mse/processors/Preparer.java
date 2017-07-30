@@ -3,8 +3,8 @@ package mse.processors;
 import mse.olddata.*;
 import mse.helpers.FileHelper;
 import mse.helpers.HtmlHelper;
-import mse.common.Author;
-import mse.common.Config;
+import mse.data.author.Author;
+import mse.common.config.Config;
 import mse.processors.prepare.MinistryLine;
 
 import java.io.*;
@@ -53,7 +53,7 @@ public class Preparer {
             System.out.println("\r" + errMessages);
         }
 
-        System.out.println("\rFinished Preparing Bible: " + FileHelper.getTargetPath(Author.BIBLE, platform));
+        System.out.println("\rFinished Preparing Bible: " + FileHelper.getTargetFolder(Author.BIBLE, File.separator));
 
     }
 
@@ -186,7 +186,7 @@ public class Preparer {
 
         System.out.print("Preparing Bible contents...");
 
-        String contentsFilePath = FileHelper.getTargetPath(Author.BIBLE, Author.BIBLE.getContentsName(), preparePlatform);
+        String contentsFilePath = FileHelper.getContentsFile(Author.BIBLE, File.separator);
 
         File bibleContentsFile = new File(contentsFilePath);
 
@@ -302,13 +302,13 @@ public class Preparer {
             File f;
 
             // the path of the input
-            String hymnsPath = Author.HYMNS.getPreparePath(platform);
+            String hymnsPath = FileHelper.getSourceFolder(Author.HYMNS, File.separator);
             f = new File(hymnsPath);
             f.mkdirs();
             System.out.print("\r\tReading Hymns from: " + f.getCanonicalPath());
 
             // the path of the output
-            String hymnsOutPath = FileHelper.getTargetPath(Author.HYMNS, platform);
+            String hymnsOutPath = FileHelper.getTargetFolder(Author.HYMNS, File.separator);
             f = new File(hymnsOutPath);
             f.mkdirs();
             System.out.print("\r\tWriting Hymns to: " + f.getCanonicalPath());
@@ -418,7 +418,7 @@ public class Preparer {
             System.out.println(ioe.getMessage());
         }
 
-        System.out.println("\rFinished preparing Hymns:" + FileHelper.getTargetPath(Author.HYMNS, platform));
+        System.out.println("\rFinished preparing Hymns:" + FileHelper.getTargetFolder(Author.HYMNS, File.separator));
     }
 
     public static void createHymnsContents(Config cfg, PreparePlatform platform) {
@@ -430,13 +430,13 @@ public class Preparer {
             File f;
 
             // the path of the input
-            String hymnsPath = Author.HYMNS.getPreparePath(platform);
+            String hymnsPath = FileHelper.getSourceFolder(Author.HYMNS, File.separator);
             f = new File(hymnsPath);
             f.mkdirs();
             System.out.print("\r\tReading Hymns from: " + f.getCanonicalPath());
 
             // the path of the output
-            String hymnsOutPath = FileHelper.getTargetPath(Author.HYMNS, platform);
+            String hymnsOutPath = FileHelper.getTargetFolder(Author.HYMNS, File.separator);
             f = new File(hymnsOutPath);
             f.mkdirs();
             System.out.print("\r\tWriting Hymns to: " + f.getCanonicalPath());
@@ -445,7 +445,7 @@ public class Preparer {
             String hymnLine;
             String hymnNumber;
 
-            PrintWriter pwOverallHymnBooksContents = new PrintWriter(new FileWriter(hymnsOutPath + Author.HYMNS.getContentsName()));
+            PrintWriter pwOverallHymnBooksContents = new PrintWriter(new FileWriter(hymnsOutPath + FileHelper.getContentsFile(Author.HYMNS)));
 
             // print the html header for the overall contents page
             HtmlHelper.writeHtmlHeader(pwOverallHymnBooksContents, "Hymn Contents", platform.getStylesLink());
@@ -568,12 +568,12 @@ public class Preparer {
 
             // set up readers/writers
             File f;
-            String sourceFolder = author.getPreparePath(platform);
+            String sourceFolder = FileHelper.getSourceFolder(author, File.separator);
             f = new File(sourceFolder);
             f.mkdirs();
             System.out.print("\r\tReading from " + f.getCanonicalPath());
 
-            String targetFolder = FileHelper.getTargetPath(author, platform);
+            String targetFolder = FileHelper.getTargetFolder(author, File.separator);
             f = new File(targetFolder);
             f.mkdirs();
             System.out.print("\r\tWriting to " + f.getCanonicalPath());
@@ -584,7 +584,7 @@ public class Preparer {
             AuthorPrepareCache apc = new AuthorPrepareCache(author);
 
             // create contents file
-            pwContents = new PrintWriter(new FileWriter(targetFolder + author.getContentsName()));
+            pwContents = new PrintWriter(new FileWriter(targetFolder + FileHelper.getContentsFile(author)));
 
             // write html head
             HtmlHelper.writeHtmlHeader(pwContents, author.getName() + " contents", platform.getStylesLink());
@@ -616,7 +616,7 @@ public class Preparer {
             apc.clearVolumeValues();
 
             // check if there is a source file for the next volume
-            File volumeFile = new File(sourceFolder + author.getPrepareSourceName(apc.volNum));
+            File volumeFile = new File(sourceFolder + FileHelper.getTextFile(author, apc.volNum));
             if (volumeFile.exists()) {
 
                 // print progress
@@ -626,7 +626,7 @@ public class Preparer {
                 brSourceText = new BufferedReader(new FileReader(volumeFile));
 
                 // get output file
-                pwHtml = new PrintWriter(new FileWriter(targetFolder + author.getVolumeName(apc.volNum)));
+                pwHtml = new PrintWriter(new FileWriter(targetFolder + author.getTargetName(apc.volNum)));
 
                 // write html head
                 HtmlHelper.writeHtmlHeader(pwHtml, author.getName() + " Volume " + apc.volNum, mseStylesLocation);
@@ -778,10 +778,10 @@ public class Preparer {
                 case '~': // specific footnote
                     outputLine.replace(charPosition, charPosition + 1,
                             String.format("<i>see <a href=\"%s_footnotes.html#%d:%d\">footnote</a></i>",
-                                    author.getContentsName(), apc.volNum, apc.pageNum));
+                                    FileHelper.getContentsFile(author), apc.volNum, apc.pageNum));
 
                     // increase character position by number of characters added (minus for testing)
-                    charPosition += 50 + author.getContentsName().length() + Integer.toString(apc.volNum).length() +
+                    charPosition += 50 + FileHelper.getContentsFile(author).length() + Integer.toString(apc.volNum).length() +
                             Integer.toString(apc.pageNum).length() - 5;
                     break;
                 case '.':
@@ -986,6 +986,7 @@ public class Preparer {
 
     /**
      * Get the link from the new format @{Book:chapter:verse} where chapter and verse are optional eg: @{Book}
+     *
      * @param charPosition
      * @param outputLine
      * @param apc
@@ -1003,7 +1004,7 @@ public class Preparer {
         endBrace++;
 
         // get the parts of the link
-        String[] linkText = outputLine.substring(startBrace +1, endBrace -1).split(":");
+        String[] linkText = outputLine.substring(startBrace + 1, endBrace - 1).split(":");
 
         // get the book name
         String bookName = linkText[0];
@@ -1027,7 +1028,7 @@ public class Preparer {
 
         // if there is a chapter get it
         int chapter = 0;
-        if (linkText.length>1) {
+        if (linkText.length > 1) {
             try {
                 chapter = Integer.parseInt(linkText[1]);
             } catch (Exception e) {
@@ -1037,7 +1038,7 @@ public class Preparer {
 
         // if there is a verse get it
         int verse = 0;
-        if (linkText.length>1) {
+        if (linkText.length > 1) {
             try {
                 verse = Integer.parseInt(linkText[1]);
             } catch (Exception e) {
@@ -1234,7 +1235,7 @@ public class Preparer {
     private static void printContentsHeading(PrintWriter pwContents, StringBuilder outputLine, Author author, int volNum, int pageNum) {
 
         pwContents.println(String.format("\t\t\t\t<a class=\"btn btn-success-outline\" href=\"%s\" role=\"button\">%s</a><span class=\"label label-primary\">%d</span>",
-                author.getVolumeName(volNum) + "#" + pageNum, outputLine, pageNum));
+                FileHelper.getHtmlFile(author, volNum) + "#" + pageNum, outputLine, pageNum));
         pwContents.println("\t\t\t\t<br>");
 
     }

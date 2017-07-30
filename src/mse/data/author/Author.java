@@ -1,11 +1,6 @@
-package mse.common;
+package mse.data.author;
 
-import mse.olddata.FileConstants;
-import mse.olddata.PreparePlatform;
-
-import java.io.File;
-
-public enum Author {
+public enum Author implements IAuthor {
 
     // region authors
 
@@ -43,119 +38,90 @@ public enum Author {
 
     // endregion
 
-    private final int id;
+    private final int index;
     private final String code;
     private final String name;
+    private final String folder;
     private final int numVols;
     private final boolean isMinistry;
     private final boolean searchable;
     private final boolean asset;
 
-    Author(int id, String code, String name, String folder, int numVols, boolean isMinistry, boolean searchable, boolean asset) {
-        this.id = id;
+    Author(int index, String code, String name, String folder, int numVols, boolean isMinistry, boolean searchable, boolean asset) {
+        this.index = index;
         this.code = code;
         this.name = name;
+        this.folder = folder;
         this.numVols = numVols;
         this.isMinistry = isMinistry;
         this.searchable = searchable;
         this.asset = asset;
     }
 
-    // region folder
-
-    public String getPath() {
-        return code.toLowerCase() + File.separator;
-    }
-
-    // endregion
-
-    // region prepare
-
-    /**
-     * Get the path to the source text file
-     *
-     * @param platform The platform that the files are prepared for eg: PC or Android
-     * @return
-     */
-    public String getPreparePath(PreparePlatform platform) {
-        return platform.getSourcePath() + File.separator + getCode().toLowerCase() + File.separator;
-    }
-
-    /**
-     * Get the path to the source text for the bible index
-     *
-     * @param platform The platform that the files are prepared for eg: PC or Android
-     * @return The path to the source text for the bible index
-     */
-    public String getIndexPreparePath(PreparePlatform platform) {
-        if (this.equals(BIBLE)) return platform.getTargetPath() + File.separator + FileConstants.BIBLE_TEXT_OUTPUT_FOLDER + File.separator;
-        return platform.getSourcePath() + File.separator + getCode().toLowerCase() + File.separator;
-    }
-
-    public String getPrepareSourceName(int volNumber) {
-        return getCode().toLowerCase() + volNumber + FileConstants.SOURCE_FILE_ENDING;
-    }
-
-    // endregion
-
-    // region filenames
-
-    public String getContentsName() {
-        return code.toLowerCase() + "-contents.html";
-    }
-
-    public String getIndexFileName() {
-        return "index-" + getCode().toLowerCase() + ".idx";
-    }
-
-    public String getVolumeName(int volumeNumber) {
-        return getCode().toLowerCase() + volumeNumber + ".html";
-    }
-
-    // endregion
-
-    // region getters
-
     public String getCode() {
         return code;
+    }
+
+    public String getFolder() {
+        return folder;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isMinistry() {
-        return isMinistry;
-    }
-
-    public boolean isSearchable() {
-        return searchable;
-    }
-
-    public boolean isAsset() {
-        return asset;
+    public String getTargetName(int volumeNumber) {
+        return folder + volumeNumber + ".html";
     }
 
     public int getNumVols() {
         return numVols;
     }
 
-    public int getID() {
-        return id;
+    @Override
+    public AuthorType getType() {
+        switch (this) {
+            case BIBLE:
+                return AuthorType.BIBLE;
+            case HYMNS:
+                return AuthorType.HYMNS;
+            case TUNES:
+                return AuthorType.TUNES;
+            default:
+                return AuthorType.MINISTRY;
+        }
     }
 
-    // endregion
+    public String getSourceName(int volumeNumber) {
+        return folder + volumeNumber + ".txt";
+    }
 
-    // region reader
+    public boolean isMinistry() {
+        return isMinistry;
+    }
 
+    @Override
+    public boolean isSearchable() {
+        return this.searchable;
+    }
+
+    @Override
+    public boolean isAsset() {
+        return asset;
+    }
+
+    /**
+     * Check if the string matches the code or name of any author (ignores case)
+     *
+     * @param authorString String to check for author match
+     * @return Author matching the string or null if none
+     */
     public static Author getFromString(String authorString) {
-
-        authorString = authorString.toLowerCase();
 
         // go through each author and check if the name or the code matches
         for (Author nextAuthor : values()) {
-            if (authorString.equals(nextAuthor.getCode().toLowerCase()) ||
-                    authorString.equals(nextAuthor.getName().toLowerCase()))
+            if (authorString.equalsIgnoreCase(nextAuthor.code) ||
+                    authorString.equalsIgnoreCase(nextAuthor.name))
                 return nextAuthor;
         }
 
@@ -165,6 +131,4 @@ public enum Author {
         return null;
 
     }
-
-    // endregion
 }

@@ -1,6 +1,6 @@
 package mse.olddata;
 
-import mse.common.Author;
+import mse.data.author.Author;
 import mse.processors.prepare.MinistryPage;
 
 /**
