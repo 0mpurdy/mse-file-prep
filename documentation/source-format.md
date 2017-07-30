@@ -1,7 +1,6 @@
-Rules
-=====
+# Rules
 
-###Bible
+### Bible
 
  - The prepare file must be named in in the format "bible%d.txt" where "%d" is the number of the book eg: for Genesis it would be "bible1.txt"
  - Each chapter is a line with only the page number in curly braces eg: for chapter 5 "{5}"
@@ -52,7 +51,7 @@ Rules
 	6  But a mist went up from the earth, and moistened the whole surface of the ground.
 ```
 
-###Hymns
+### Hymns
 
  - The prepare file must be named in the format "hymns%s.txt" where "%s" is the name of the book eg: "hymns1962.txt"
  - The first line of the document must be "{#Hymns (%s)}" where "%s" is the name of the book eg: "{#Hymns (1962)}"
@@ -105,7 +104,7 @@ The first two hymns are shown from the 1962 hymn book as an example
 	Unto Thee our worship flows.
 ```
 
-###Ministry
+### Ministry
 
  - The prepare file must be named in the format "%s%d.txt" where:
    + "%s" is the initials of the author (or accepted abbreviation) in lower case eg: for John Darby "jnd"

@@ -14,5 +14,6 @@ If you find any errors at all in any files please bring it to my attention and I
 
 ## Documentation
 
-The documentation on how to create files that can be prepared into web pages and added to the ministry search engine is
-in the "Documentation" folder and will describe in detail how a file should be formatted.
+  - [How to format the source files][1]
+
+[1]: ./documentation/source-format.md
