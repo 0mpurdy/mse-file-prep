@@ -1,7 +1,7 @@
 package mse.olddata;
 
-import mse.common.Author;
-import mse.common.Config;
+import mse.data.author.Author;
+import mse.common.config.Config;
 import mse.helpers.FileHelper;
 
 import java.io.File;

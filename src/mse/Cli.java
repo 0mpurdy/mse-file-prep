@@ -1,6 +1,6 @@
 package mse;
 
-import mse.common.Config;
+import mse.common.config.Config;
 import mse.menu.MenuAction;
 import mse.menu.MenuPrinter;
 

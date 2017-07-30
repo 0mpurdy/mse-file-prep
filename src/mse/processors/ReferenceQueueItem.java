@@ -1,6 +1,6 @@
 package mse.processors;
 
-import mse.common.Author;
+import mse.data.author.Author;
 
 /**
  * Created by mj_pu_000 on 10/09/2015.

@@ -1,6 +1,6 @@
 package mse.menu;
 
-import mse.common.Author;
+import mse.data.author.Author;
 
 import java.util.ArrayList;
 

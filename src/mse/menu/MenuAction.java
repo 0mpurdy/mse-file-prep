@@ -1,8 +1,9 @@
 package mse.menu;
 
-import mse.common.Author;
-import mse.common.AuthorIndex;
-import mse.common.Config;
+import mse.common.log.ILogger;
+import mse.data.author.Author;
+import mse.data.author.AuthorIndex;
+import mse.common.config.Config;
 import mse.olddata.PreparePlatform;
 import mse.helpers.Serializer;
 import mse.processors.*;
@@ -24,7 +25,7 @@ import java.util.Scanner;
  */
 public class MenuAction {
 
-    public static void executeMenuChoice(int mainMenuChoice, Scanner sc, Config cfg) {
+    public static void executeMenuChoice(int mainMenuChoice, Scanner sc, Config cfg, ILogger logger) {
         switch (mainMenuChoice) {
             case 0:
                 System.out.println("Closing ...");
@@ -52,7 +53,7 @@ public class MenuAction {
                 break;
             case 5:
                 MenuPrinter.printMenu(MenuPrinter.otherMainMenuOptions);
-                doOtherMenuOption(cfg, sc.nextInt(), sc);
+                doOtherMenuOption(cfg, sc.nextInt(), sc, logger);
                 break;
             case 6:
                 MenuPrinter.printMenu(MenuPrinter.debugMenuOptions);
@@ -206,16 +207,16 @@ public class MenuAction {
         }
     }
 
-    private static void createSuperIndex(Scanner sc, Config cfg) {
-        System.out.println("Creating super index");
-        // choose system to create super index for
-        PreparePlatform platform = chooseSystem(sc);
-        if (platform != null) {
-            createSuperIndex(cfg, platform);
-        }
-    }
+//    private static void createSuperIndex(Scanner sc, Config cfg) {
+//        System.out.println("Creating super index");
+//        // choose system to create super index for
+//        PreparePlatform platform = chooseSystem(sc);
+//        if (platform != null) {
+//            createSuperIndex(cfg, platform);
+//        }
+//    }
 
-    private static void checkAuthorIndex(Scanner sc) {
+    private static void checkAuthorIndex(Scanner sc, ILogger logger) {
         System.out.println("\nWhich author index do you wish to check?");
         MenuPrinter.printAuthorMenu();
         int authorChoice = sc.nextInt();
@@ -229,8 +230,8 @@ public class MenuAction {
                 // choose system to check index for
                 PreparePlatform platform = chooseSystem(sc);
                 if (platform != null) {
-                    AuthorIndex authorIndex = new AuthorIndex(author);
-                    authorIndex.loadIndex(platform);
+                    AuthorIndex authorIndex = new AuthorIndex(author, logger);
+                    authorIndex.loadIndex(platform.getResDir());
                     System.out.println(authorIndex.getTokenCountMap().size());
 
                     System.out.print("Do you wish to write the index to a file (y/n): ");
@@ -258,7 +259,7 @@ public class MenuAction {
         }
     }
 
-    private static void checkAllIndexes(Scanner sc) {
+    private static void checkAllIndexes(Scanner sc, ILogger logger) {
 
         // choose system to check index for
         PreparePlatform platform = chooseSystem(sc);
@@ -266,15 +267,15 @@ public class MenuAction {
             ArrayList<AuthorIndex> authorIndexes = new ArrayList<>();
             for (Author nextAuthor : Author.values()) {
                 if (nextAuthor.isSearchable()) {
-                    AuthorIndex authorIndex = new AuthorIndex(nextAuthor);
-                    authorIndex.loadIndex(platform);
+                    AuthorIndex authorIndex = new AuthorIndex(nextAuthor, logger);
+                    authorIndex.loadIndex(platform.getResDir());
                     authorIndexes.add(authorIndex);
                 }
             }
         }
     }
 
-    private static void doOtherMenuOption(Config cfg, int option, Scanner sc) {
+    private static void doOtherMenuOption(Config cfg, int option, Scanner sc, ILogger logger) {
         switch (option) {
             case 0:
                 return;
@@ -285,13 +286,14 @@ public class MenuAction {
                 createSingleAuthorIndex(sc, cfg);
                 break;
             case 3:
-                createSuperIndex(sc, cfg);
+                System.out.println("Not currently working");
+//                createSuperIndex(sc, cfg);
                 break;
             case 4:
-                checkAuthorIndex(sc);
+                checkAuthorIndex(sc, logger);
                 break;
             case 5:
-                checkAllIndexes(sc);
+                checkAllIndexes(sc, logger);
                 break;
             case 6:
                 serializeAllBibles(chooseSystem(sc));
@@ -381,7 +383,7 @@ public class MenuAction {
 
     }
 
-    private static void createSuperIndex(Config cfg, PreparePlatform platform) {
+    private static void createSuperIndex(Config cfg, PreparePlatform platform, ILogger logger) {
 
         // super index token count
         HashMap<String, Integer> superIndex = new HashMap<>();
@@ -392,8 +394,8 @@ public class MenuAction {
 
                 System.out.println("Creating super index for " + nextAuthor.getName());
 
-                AuthorIndex nextAuthorIndex = new AuthorIndex(nextAuthor);
-                nextAuthorIndex.loadIndex(platform);
+                AuthorIndex nextAuthorIndex = new AuthorIndex(nextAuthor, logger);
+                nextAuthorIndex.loadIndex(platform.getResDir());
 
                 // if the index loads
                 if (nextAuthorIndex != null) {
