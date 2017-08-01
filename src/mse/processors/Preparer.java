@@ -1,5 +1,6 @@
 package mse.processors;
 
+import mse.data.hymn.Hymn;
 import mse.olddata.*;
 import mse.helpers.FileHelper;
 import mse.helpers.HtmlHelper;
@@ -17,6 +18,30 @@ import java.util.HashMap;
  * Also prepares contents pages.
  */
 public class Preparer {
+
+    // region common
+
+    private static final String READ_MESSAGE = "\r\tReading from ";
+    private static final String WRITE_MESSAGE = "\r\tWriting to ";
+
+    private static String getSourceFolderPath(PreparePlatform platform, Author author, String message) throws IOException {
+        String path = platform.getResDir() + File.separator + FileHelper.getSourceFolder(author, File.separator);
+        return getFolderPath(path, message);
+    }
+
+    private static String getTargetFolderPath(PreparePlatform platform, Author author, String message) throws IOException {
+        String path = platform.getResDir() + File.separator + FileHelper.getTargetFolder(author, File.separator);
+        return getFolderPath(path, message);
+    }
+
+    private static String getFolderPath(String path, String message) throws IOException {
+        File f = new File(path);
+        f.mkdirs();
+        System.out.print(message + f.getCanonicalPath());
+        return path;
+    }
+
+    // endregion
 
     // region bible
 
@@ -53,7 +78,7 @@ public class Preparer {
             System.out.println("\r" + errMessages);
         }
 
-        System.out.println("\rFinished Preparing Bible: " + FileHelper.getTargetFolder(Author.BIBLE, File.separator));
+        System.out.println("\rFinished Preparing Bible: " + platform.getResDir() + File.separator + FileHelper.getTargetFolder(Author.BIBLE, File.separator));
 
     }
 
@@ -65,6 +90,8 @@ public class Preparer {
         // create print writers to write the bible html and txt (overwrite any existing files)
         PrintWriter pwBible = new PrintWriter(new FileWriter(bpc.getBibleOutput(), false));
         PrintWriter pwBibleTxt = new PrintWriter(new FileWriter(bpc.getBibleTextOutput()));
+
+        System.out.print(" READ:  " + bpc.getJndSource() + " WRITE: " + bpc.getBibleOutput());
 
         // write the html header
         HtmlHelper.writeHtmlHeader(pwBible, "Darby translation and King James Version of The Bible", mseStyleLocation);
@@ -297,21 +324,17 @@ public class Preparer {
 
         System.out.print("Preparing Hymns");
 
+        String hymnsPath = FileHelper.getTargetFolder(Author.HYMNS, File.separator);
+
         try {
 
             File f;
 
             // the path of the input
-            String hymnsPath = FileHelper.getSourceFolder(Author.HYMNS, File.separator);
-            f = new File(hymnsPath);
-            f.mkdirs();
-            System.out.print("\r\tReading Hymns from: " + f.getCanonicalPath());
+            hymnsPath = getSourceFolderPath(platform, Author.HYMNS, "\r\tReading Hymns from: ");
 
             // the path of the output
-            String hymnsOutPath = FileHelper.getTargetFolder(Author.HYMNS, File.separator);
-            f = new File(hymnsOutPath);
-            f.mkdirs();
-            System.out.print("\r\tWriting Hymns to: " + f.getCanonicalPath());
+            String hymnsOutPath = getTargetFolderPath(platform, Author.HYMNS, "\r\tWriting Hymns to: ");
 
             // set up buffers
             String hymnLine;
@@ -324,11 +347,11 @@ public class Preparer {
             for (HymnBook nextHymnBook : HymnBook.values()) {
 
                 System.out.print("\r\tPreparing " + nextHymnBook.getName() + " ");
-                String inputFileName = hymnsPath + nextHymnBook.getSourceFilename();
+                String inputFileName = hymnsPath + File.separator + nextHymnBook.getSourceFilename();
 
                 // make the reader and writer
                 BufferedReader brHymns = new BufferedReader(new FileReader(inputFileName));
-                PrintWriter pwHymns = new PrintWriter(new FileWriter(hymnsOutPath + nextHymnBook.getTargetFilename()));
+                PrintWriter pwHymns = new PrintWriter(new FileWriter(hymnsOutPath + File.separator + nextHymnBook.getTargetFilename()));
 
                 // read the first line of the hymn book
                 hymnLine = brHymns.readLine();
@@ -418,7 +441,7 @@ public class Preparer {
             System.out.println(ioe.getMessage());
         }
 
-        System.out.println("\rFinished preparing Hymns:" + FileHelper.getTargetFolder(Author.HYMNS, File.separator));
+        System.out.println("\rFinished preparing Hymns:" + hymnsPath);
     }
 
     public static void createHymnsContents(Config cfg, PreparePlatform platform) {
@@ -427,25 +450,17 @@ public class Preparer {
 
         try {
 
-            File f;
-
             // the path of the input
-            String hymnsPath = FileHelper.getSourceFolder(Author.HYMNS, File.separator);
-            f = new File(hymnsPath);
-            f.mkdirs();
-            System.out.print("\r\tReading Hymns from: " + f.getCanonicalPath());
+            String hymnsPath = getSourceFolderPath(platform, Author.HYMNS, "\r\tReading Hymns from: ");
 
             // the path of the output
-            String hymnsOutPath = FileHelper.getTargetFolder(Author.HYMNS, File.separator);
-            f = new File(hymnsOutPath);
-            f.mkdirs();
-            System.out.print("\r\tWriting Hymns to: " + f.getCanonicalPath());
+            String hymnsOutPath = getTargetFolderPath(platform, Author.HYMNS, "\r\tWriting Hymns to: ");
 
             // set up buffers
             String hymnLine;
             String hymnNumber;
 
-            PrintWriter pwOverallHymnBooksContents = new PrintWriter(new FileWriter(hymnsOutPath + FileHelper.getContentsFile(Author.HYMNS)));
+            PrintWriter pwOverallHymnBooksContents = new PrintWriter(new FileWriter(hymnsOutPath + File.separator + FileHelper.getContentsFile(Author.HYMNS)));
 
             // print the html header for the overall contents page
             HtmlHelper.writeHtmlHeader(pwOverallHymnBooksContents, "Hymn Contents", platform.getStylesLink());
@@ -455,14 +470,14 @@ public class Preparer {
             for (HymnBook nextHymnBook : HymnBook.values()) {
 
                 // create a print writer for the hymnbook
-                PrintWriter pwSingleHymnBookContents = new PrintWriter(new File(hymnsOutPath + nextHymnBook.getContentsName()));
+                PrintWriter pwSingleHymnBookContents = new PrintWriter(new File(hymnsOutPath + File.separator + nextHymnBook.getContentsName()));
 
                 // print the html header for the single book contents page
                 HtmlHelper.writeHtmlHeader(pwSingleHymnBookContents, "Hymn Contents", platform.getStylesLink());
                 HtmlHelper.writeStart(pwSingleHymnBookContents);
 
                 System.out.print("\r\tScanning " + nextHymnBook.getName() + " ");
-                String inputFileName = hymnsPath + nextHymnBook.getSourceFilename();
+                String inputFileName = hymnsPath + File.separator + nextHymnBook.getSourceFilename();
 
                 // make the reader and writer
                 BufferedReader brHymns = new BufferedReader(new FileReader(inputFileName));
@@ -568,15 +583,9 @@ public class Preparer {
 
             // set up readers/writers
             File f;
-            String sourceFolder = FileHelper.getSourceFolder(author, File.separator);
-            f = new File(sourceFolder);
-            f.mkdirs();
-            System.out.print("\r\tReading from " + f.getCanonicalPath());
+            String sourceFolder = getSourceFolderPath(platform, author, READ_MESSAGE);
 
-            String targetFolder = FileHelper.getTargetFolder(author, File.separator);
-            f = new File(targetFolder);
-            f.mkdirs();
-            System.out.print("\r\tWriting to " + f.getCanonicalPath());
+            String targetFolder = getTargetFolderPath(platform, author, WRITE_MESSAGE);
 
             BufferedReader brSourceText = null;
             PrintWriter pwHtml = null;
@@ -584,7 +593,7 @@ public class Preparer {
             AuthorPrepareCache apc = new AuthorPrepareCache(author);
 
             // create contents file
-            pwContents = new PrintWriter(new FileWriter(targetFolder + FileHelper.getContentsFile(author)));
+            pwContents = new PrintWriter(new FileWriter(targetFolder + File.separator + FileHelper.getContentsFile(author)));
 
             // write html head
             HtmlHelper.writeHtmlHeader(pwContents, author.getName() + " contents", platform.getStylesLink());
@@ -616,7 +625,7 @@ public class Preparer {
             apc.clearVolumeValues();
 
             // check if there is a source file for the next volume
-            File volumeFile = new File(sourceFolder + FileHelper.getTextFile(author, apc.volNum));
+            File volumeFile = new File(sourceFolder + File.separator + FileHelper.getTextFile(author, apc.volNum));
             if (volumeFile.exists()) {
 
                 // print progress
@@ -626,7 +635,7 @@ public class Preparer {
                 brSourceText = new BufferedReader(new FileReader(volumeFile));
 
                 // get output file
-                pwHtml = new PrintWriter(new FileWriter(targetFolder + author.getTargetName(apc.volNum)));
+                pwHtml = new PrintWriter(new FileWriter(targetFolder + File.separator + author.getTargetName(apc.volNum)));
 
                 // write html head
                 HtmlHelper.writeHtmlHeader(pwHtml, author.getName() + " Volume " + apc.volNum, mseStylesLocation);

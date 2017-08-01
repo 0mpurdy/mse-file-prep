@@ -21,10 +21,10 @@ public class ReferenceProcessor extends Thread {
     private long totalTokenCount = 0;
     private PreparePlatform platform;
 
-    public ReferenceProcessor(ReferenceQueue tokenQueue, PreparePlatform platform, ILogger logger) {
+    public ReferenceProcessor(ReferenceQueue tokenQueue, PreparePlatform platform) {
         this.tokenQueue = tokenQueue;
         this.author = tokenQueue.getAuthor();
-        this.authorIndex = new AuthorIndex(author, logger);
+        this.authorIndex = new AuthorIndex(author);
         this.cfg = tokenQueue.getConfig();
         this.platform = platform;
     }
@@ -43,7 +43,7 @@ public class ReferenceProcessor extends Thread {
         authorIndex.cleanIndexArrays();
 
         // output index
-        authorIndex.writeIndex(FileHelper.getIndexFile(author, File.separator));
+        authorIndex.writeIndex(platform.getResDir() + File.separator + FileHelper.getIndexFile(author, File.separator));
 
         System.out.println("Total token count: " + totalTokenCount);
 
