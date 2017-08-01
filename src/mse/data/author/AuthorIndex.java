@@ -14,8 +14,6 @@ import java.util.Map;
  */
 public class AuthorIndex {
 
-    private ILogger logger;
-
     private Author author;
     private HashMap<String, Integer> tokenCountMap;
     private HashMap<String, short[]> lastRefMap;
@@ -29,11 +27,10 @@ public class AuthorIndex {
     short[] newReferences;
     int count;
 
-    public AuthorIndex(Author author, ILogger logger) {
+    public AuthorIndex(Author author) {
         this.author = author;
         tokenCountMap = new HashMap<>();
         references = new HashMap<>();
-        this.logger = logger;
     }
 
     public Author getAuthor() {

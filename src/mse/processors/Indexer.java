@@ -20,21 +20,21 @@ public class Indexer {
 
         AuthorIndex authorIndex = new AuthorIndex(author);
 
-        // source file path for text to index
-        String sourcePath = author.getIndexPreparePath(platform);
-
-        // destination file path
-        String destinationPath = FileHelper.getTargetPath(author, platform);
+//        // source file path for text to index
+//        String sourcePath = author.getIndexPreparePath(platform);
+//
+//        // destination file path
+//        String destinationPath = FileHelper.getTargetPath(author, platform);
 
         int volumeNumber = 1;
 
-        File inputVolume = getVolumeName(platform, author, volumeNumber);
+        File inputVolume = getFile(platform, author, volumeNumber);
 
         // for all the volumes
         while (inputVolume != null) {
             indexVolume(authorIndex, inputVolume, volumeNumber, referenceQueue, messages);
             volumeNumber++;
-            inputVolume = getVolumeName(platform, author, volumeNumber);
+            inputVolume = getFile(platform, author, volumeNumber);
         }
 
     } // indexAuthor
@@ -152,14 +152,8 @@ public class Indexer {
      * @param volumeNumber The volume number being indexed
      * @return The file to be indexed
      */
-    private static File getVolumeName(PreparePlatform platform, Author author, int volumeNumber) {
-        String filename;
-        if (author == Author.HYMNS) {
-            if (volumeNumber - 1 >= HymnBook.values().length) return null;
-            filename = author.getPreparePath(platform) + HymnBook.values()[volumeNumber - 1].getSourceFilename();
-        } else {
-            filename = author.getIndexPreparePath(platform) + author.getPrepareSourceName(volumeNumber);
-        }
+    private static File getFile(PreparePlatform platform, Author author, int volumeNumber) {
+        String filename = platform.getResDir() + File.separator + FileHelper.getSourceFile(author, volumeNumber, File.separator);
         File file = new File(filename);
         if (file.exists()) return file;
         else return null;

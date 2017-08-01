@@ -1,8 +1,12 @@
 package mse.helpers;
 
+import mse.data.author.Author;
 import mse.data.author.BibleBook;
 import mse.data.author.HymnBook;
 import mse.data.author.IAuthor;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Michael Purdy
@@ -28,6 +32,36 @@ public abstract class FileHelper {
      */
     public static String getSourceFolder() {
         return "source";
+    }
+
+    /**
+     * Get the source path for an author
+     * eg: res/source/bible/bible8.txt
+     *
+     * @param author        author of the source file
+     * @param volumeNumber  volume number of the source file
+     * @param fileSeparator file separator between folders
+     * @return
+     */
+    public static String getSourceFile(Author author, int volumeNumber, String fileSeparator) {
+        return getSourceFolder(author, fileSeparator) + File.separator + getSourceFile(author, volumeNumber);
+    }
+
+    /**
+     * Get the source filename for an author
+     * eg: bible8.txt
+     *
+     * @param author       author of the source file
+     * @param volumeNumber volume number of the source file
+     * @return
+     */
+    public static String getSourceFile(Author author, int volumeNumber) {
+        switch (author) {
+            case BIBLE:
+                return "bible" + volumeNumber + ".txt";
+            default:
+                return getTextFile(author, volumeNumber);
+        }
     }
 
     /**
@@ -165,6 +199,23 @@ public abstract class FileHelper {
      */
     public static String getContentsFile(IAuthor author) {
         return author.getCode().toLowerCase() + "-contents.html";
+    }
+
+    /**
+     * Check if the folder exists, if it doesn't, create it
+     *
+     * @param path String path to folder that is to be checked
+     * @return pathname if it exists or is created
+     * @throws IOException
+     */
+    public static String checkFolder(String path) throws IOException {
+        File f = new File(path);
+        System.out.print("\rChecking " + f.getCanonicalPath());
+        if (f.exists() || f.mkdirs()) {
+            return path;
+        } else {
+            return null;
+        }
     }
 
 }

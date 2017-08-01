@@ -37,10 +37,10 @@ public class BiblePrepareCache {
 
     public BiblePrepareCache(Config cfg, PreparePlatform platform) throws IOException {
         this.cfg = cfg;
-        jndBiblePath = FileHelper.checkSourceFolder(platform, FileConstants.JND_BIBLE_FOLDER);
-        kjvBiblePath = FileHelper.checkSourceFolder(platform, FileConstants.KJV_BIBLE_FOLDER);
-        bibleDestinationPath = FileHelper.checkTargetFolder(FileHelper.getTargetPath(Author.BIBLE, platform));
-        bibleTxtDestinationPath = FileHelper.checkTargetFolder(platform.getTargetPath() + File.separator + FileConstants.BIBLE_TEXT_OUTPUT_FOLDER);
+        jndBiblePath = FileHelper.checkFolder(platform.getSourcePath() + File.separator + FileConstants.JND_BIBLE_FOLDER);
+        kjvBiblePath = FileHelper.checkFolder(platform.getSourcePath() + File.separator + FileConstants.KJV_BIBLE_FOLDER);
+        bibleDestinationPath = FileHelper.checkFolder(platform.getResDir() + File.separator + FileHelper.getTargetFolder(Author.BIBLE, File.separator));
+        bibleTxtDestinationPath = FileHelper.checkFolder(platform.getTargetPath() + File.separator + FileConstants.BIBLE_TEXT_OUTPUT_FOLDER);
     }
 
     public String getSynopsisSource() {

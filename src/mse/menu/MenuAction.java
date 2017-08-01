@@ -25,7 +25,7 @@ import java.util.Scanner;
  */
 public class MenuAction {
 
-    public static void executeMenuChoice(int mainMenuChoice, Scanner sc, Config cfg, ILogger logger) {
+    public static void executeMenuChoice(int mainMenuChoice, Scanner sc, Config cfg) {
         switch (mainMenuChoice) {
             case 0:
                 System.out.println("Closing ...");
@@ -53,7 +53,7 @@ public class MenuAction {
                 break;
             case 5:
                 MenuPrinter.printMenu(MenuPrinter.otherMainMenuOptions);
-                doOtherMenuOption(cfg, sc.nextInt(), sc, logger);
+                doOtherMenuOption(cfg, sc.nextInt(), sc);
                 break;
             case 6:
                 MenuPrinter.printMenu(MenuPrinter.debugMenuOptions);
@@ -216,7 +216,7 @@ public class MenuAction {
 //        }
 //    }
 
-    private static void checkAuthorIndex(Scanner sc, ILogger logger) {
+    private static void checkAuthorIndex(Scanner sc) {
         System.out.println("\nWhich author index do you wish to check?");
         MenuPrinter.printAuthorMenu();
         int authorChoice = sc.nextInt();
@@ -230,7 +230,7 @@ public class MenuAction {
                 // choose system to check index for
                 PreparePlatform platform = chooseSystem(sc);
                 if (platform != null) {
-                    AuthorIndex authorIndex = new AuthorIndex(author, logger);
+                    AuthorIndex authorIndex = new AuthorIndex(author);
                     authorIndex.loadIndex(platform.getResDir());
                     System.out.println(authorIndex.getTokenCountMap().size());
 
@@ -259,7 +259,7 @@ public class MenuAction {
         }
     }
 
-    private static void checkAllIndexes(Scanner sc, ILogger logger) {
+    private static void checkAllIndexes(Scanner sc) {
 
         // choose system to check index for
         PreparePlatform platform = chooseSystem(sc);
@@ -267,7 +267,7 @@ public class MenuAction {
             ArrayList<AuthorIndex> authorIndexes = new ArrayList<>();
             for (Author nextAuthor : Author.values()) {
                 if (nextAuthor.isSearchable()) {
-                    AuthorIndex authorIndex = new AuthorIndex(nextAuthor, logger);
+                    AuthorIndex authorIndex = new AuthorIndex(nextAuthor);
                     authorIndex.loadIndex(platform.getResDir());
                     authorIndexes.add(authorIndex);
                 }
@@ -275,7 +275,7 @@ public class MenuAction {
         }
     }
 
-    private static void doOtherMenuOption(Config cfg, int option, Scanner sc, ILogger logger) {
+    private static void doOtherMenuOption(Config cfg, int option, Scanner sc) {
         switch (option) {
             case 0:
                 return;
@@ -290,10 +290,10 @@ public class MenuAction {
 //                createSuperIndex(sc, cfg);
                 break;
             case 4:
-                checkAuthorIndex(sc, logger);
+                checkAuthorIndex(sc);
                 break;
             case 5:
-                checkAllIndexes(sc, logger);
+                checkAllIndexes(sc);
                 break;
             case 6:
                 serializeAllBibles(chooseSystem(sc));
@@ -394,7 +394,7 @@ public class MenuAction {
 
                 System.out.println("Creating super index for " + nextAuthor.getName());
 
-                AuthorIndex nextAuthorIndex = new AuthorIndex(nextAuthor, logger);
+                AuthorIndex nextAuthorIndex = new AuthorIndex(nextAuthor);
                 nextAuthorIndex.loadIndex(platform.getResDir());
 
                 // if the index loads
