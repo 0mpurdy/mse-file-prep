@@ -31,6 +31,8 @@ public class AuthorIndex {
         this.author = author;
         tokenCountMap = new HashMap<>();
         references = new HashMap<>();
+        lastRefMap = new HashMap<>();
+        nextReferenceIndex = new HashMap<>();;
     }
 
     public Author getAuthor() {

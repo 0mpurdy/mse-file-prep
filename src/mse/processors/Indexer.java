@@ -153,7 +153,12 @@ public class Indexer {
      * @return The file to be indexed
      */
     private static File getFile(PreparePlatform platform, Author author, int volumeNumber) {
-        String filename = platform.getResDir() + File.separator + FileHelper.getSourceFile(author, volumeNumber, File.separator);
+        String filename;
+        try {
+            filename = platform.getResDir() + File.separator + FileHelper.getSourceFile(author, volumeNumber, File.separator);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
         File file = new File(filename);
         if (file.exists()) return file;
         else return null;
