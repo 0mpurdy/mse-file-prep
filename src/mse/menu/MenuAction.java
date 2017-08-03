@@ -232,23 +232,7 @@ public class MenuAction {
                 if (platform != null) {
                     AuthorIndex authorIndex = new AuthorIndex(author);
                     authorIndex.loadIndex(platform.getResDir());
-                    System.out.println(authorIndex.getTokenCountMap().size());
-
-                    System.out.print("Do you wish to write the index to a file (y/n): ");
-                    if (sc.nextLine().equalsIgnoreCase("y")) {
-                        try {
-                            BufferedWriter bw = new BufferedWriter(new FileWriter("index.txt"));
-                            for (Map.Entry<String, short[]> entry : authorIndex.getReferencesMap().entrySet()) {
-                                bw.write("\"" + entry.getKey() + "\": [");
-                                for (short ref : entry.getValue()) {
-                                    bw.write(ref + ", ");
-                                }
-                                bw.write("]\n");
-                            }
-                        } catch (IOException ioe) {
-                            System.out.println("Error writing index");
-                        }
-                    }
+                    checkSingleIndex(authorIndex, sc);
                 }
 
             } else {
@@ -256,6 +240,28 @@ public class MenuAction {
             }
         } else {
             System.out.println("This is not a valid option");
+        }
+    }
+
+    private static void checkSingleIndex(AuthorIndex authorIndex, Scanner sc) {
+        System.out.println("Author: " + authorIndex.getAuthorName());
+        System.out.println("Token map size: " + authorIndex.getTokenCountMap().size());
+        System.out.println("Key 1: " + authorIndex.getTokenCountMap().keySet().iterator().next());
+
+        System.out.print("Do you wish to write the index to a file (y/n): ");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter("index.txt"));
+                for (Map.Entry<String, short[]> entry : authorIndex.getReferencesMap().entrySet()) {
+                    bw.write("\"" + entry.getKey() + "\": [");
+                    for (short ref : entry.getValue()) {
+                        bw.write(ref + ", ");
+                    }
+                    bw.write("]\n");
+                }
+            } catch (IOException ioe) {
+                System.out.println("Error writing index");
+            }
         }
     }
 
@@ -270,6 +276,7 @@ public class MenuAction {
                     AuthorIndex authorIndex = new AuthorIndex(nextAuthor);
                     authorIndex.loadIndex(platform.getResDir());
                     authorIndexes.add(authorIndex);
+                    checkSingleIndex(authorIndex, sc);
                 }
             }
         }
