@@ -1,4 +1,4 @@
-# File Preparation (mse-file-prep)
+# File Preparation (com.a0mpurdy.mse-file-prep)
 This is a java console application used to prepare files to be used with the MSE
 
 ## In progress
