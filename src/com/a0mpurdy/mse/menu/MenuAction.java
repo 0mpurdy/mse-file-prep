@@ -1,6 +1,5 @@
 package com.a0mpurdy.mse.menu;
 
-import com.a0mpurdy.mse.common.log.ILogger;
 import com.a0mpurdy.mse.data.author.Author;
 import com.a0mpurdy.mse.data.author.AuthorIndex;
 import com.a0mpurdy.mse.common.config.Config;
@@ -9,11 +8,12 @@ import com.a0mpurdy.mse.helpers.Serializer;
 import com.a0mpurdy.mse.processors.*;
 import com.a0mpurdy.mse.data.bible.Bible;
 import com.a0mpurdy.mse.reader.bible.BibleTextReader;
-import com.a0mpurdy.mse.data.hymn.HymnBook;
 import com.a0mpurdy.mse.reader.hymn.HymnTextReader;
 import com.a0mpurdy.mse.data.ministry.MinistryAuthor;
 import com.a0mpurdy.mse.reader.ministry.AuthorDetails;
 import com.a0mpurdy.mse.reader.ministry.MinistryTextReader;
+import com.a0mpurdy.mse_core.data.hymn.HymnBook;
+import com.a0mpurdy.mse_core.log.ILogger;
 
 import java.io.*;
 import java.util.ArrayList;

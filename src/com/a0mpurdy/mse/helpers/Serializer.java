@@ -2,7 +2,7 @@ package com.a0mpurdy.mse.helpers;
 
 import com.a0mpurdy.mse.data.ministry.MinistryAuthor;
 import com.a0mpurdy.mse.data.bible.Bible;
-import com.a0mpurdy.mse.data.hymn.HymnBook;
+import com.a0mpurdy.mse_core.data.hymn.HymnBook;
 
 import java.io.*;
 

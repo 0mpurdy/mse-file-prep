@@ -1,14 +1,15 @@
-package com.a0mpurdy.mse.data.hymn;
+package com.a0mpurdy.mse_core.data.hymn;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by Michael Purdy on 17/03/2017.
+ * Created by mj_pu_000 on 07/11/2017.
  */
+
 public class HymnVerse implements Serializable {
 
-    private static final long serialVersionUID = 8458991589149417489L;
+    private static final long serialVersionUID = 2L;
 
     private Hymn parentHymn;
     private int verseNumber;
@@ -20,15 +21,28 @@ public class HymnVerse implements Serializable {
         this.lines = new ArrayList<>();
     }
 
-    public void addLine(String line) {
-        this.lines.add(line);
-    }
-
     public String getShortDescription() {
         return this.parentHymn.getShortDescription() + ":" + verseNumber;
     }
 
     public Hymn getParentHymn() {
         return parentHymn;
+    }
+
+    public String getVerseText() {
+        StringBuilder verse = new StringBuilder();
+        for (String line : lines) {
+            verse.append(line);
+            verse.append('\n');
+        }
+        return verse.toString();
+    }
+
+    public int getNumber() {
+        return verseNumber;
+    }
+
+    public void addLine(String line) {
+        this.lines.add(line);
     }
 }

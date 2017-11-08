@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MSE-FilePrep.iml" filepath="$PROJECT_DIR$/MSE-FilePrep.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mse-core/mse-core.iml" filepath="$PROJECT_DIR$/mse-core/mse-core.iml" />
     </modules>
   </component>
 </project>
