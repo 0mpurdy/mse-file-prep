@@ -1,8 +1,10 @@
 package com.a0mpurdy.mse.reader.hymn;
 
-import com.a0mpurdy.mse.data.hymn.HymnBook;
-import com.a0mpurdy.mse.data.hymn.HymnVerse;
+import com.a0mpurdy.mse.data.hymn.HymnBookBuilder;
+import com.a0mpurdy.mse.data.hymn.HymnBuilder;
 import com.a0mpurdy.mse.reader.MseReaderException;
+import com.a0mpurdy.mse_core.data.hymn.HymnBook;
+import com.a0mpurdy.mse_core.data.hymn.HymnVerse;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class HymnTextReader {
 
     public HymnBook readHymnBook(String folder, String filename) {
 
-        HymnBook hymnBook = new HymnBook(null, filename, null);
+        HymnBookBuilder hymnBook = new HymnBookBuilder(null, filename, null);
 
         System.out.print("Preparing Hymns");
 
@@ -43,7 +45,7 @@ public class HymnTextReader {
             hymnBook.setTitle(getTitleFromLine(line));
 
             // create the first verse to pass in
-            HymnVerse currentVerse = hymnBook.setFirstHymn(1, "invalid", "invalid").createNewVerse(1);
+            HymnVerse currentVerse = hymnBook.createNewHymn(1, "invalid", "invalid").createNewVerse(1);
 
             // read the second line of the hymn book
             line = brHymns.readLine();
@@ -70,7 +72,7 @@ public class HymnTextReader {
             System.out.println(e.getMessage());
         }
 
-        return hymnBook;
+        return hymnBook.asHymnBook();
     }
 
     private HymnVerse parseLine(String line, HymnVerse currentVerse, BufferedReader brHymns) throws IOException, MseReaderException {
@@ -90,9 +92,7 @@ public class HymnTextReader {
 
             // create new Hymn
             if (hymnNumber > 1) {
-                currentVerse = currentVerse.getParentHymn().getParentHymnBook().createNewHymn(hymnNumber, author, meter).createNewVerse(1);
-            } else {
-                currentVerse = currentVerse.getParentHymn().getParentHymnBook().setFirstHymn(hymnNumber, author, meter).createNewVerse(1);
+                currentVerse = HymnBookBuilder.createNewHymn(currentVerse.getParentHymn().getParentHymnBook(), hymnNumber, author, meter).createNewVerse(1);
             }
 
         } else if (line.indexOf("|") == 0) {
@@ -111,7 +111,7 @@ public class HymnTextReader {
 
                 // start a new verse (unless verse 1 which is created when creating a new hymn)
                 if (verseNumber > 1) {
-                    currentVerse = currentVerse.getParentHymn().createNewVerse(verseNumber);
+                    currentVerse = HymnBuilder.createNewVerse(currentVerse.getParentHymn(), verseNumber);
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                 throw new MseReaderException("Could not format new verse number \"" + line + "\" after " + currentVerse.getShortDescription());

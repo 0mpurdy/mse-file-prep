@@ -1,5 +1,9 @@
 package com.a0mpurdy.mse.common.log;
 
+import com.a0mpurdy.mse_core.log.ILogger;
+import com.a0mpurdy.mse_core.log.LogLevel;
+import com.a0mpurdy.mse_core.log.LogRow;
+
 /**
  * Created by mj_pu_000 on 28/09/2015.
  */
