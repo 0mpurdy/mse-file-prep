@@ -11,7 +11,7 @@ package com.a0mpurdy.mse.common.config;
  */
 public class Config {
 
-    private static final String mseVersion = "3.0.5";
+    private static final String mseVersion = "3.0.6";
 
     // todo fix laziness
     public FileConfig fileConfig;

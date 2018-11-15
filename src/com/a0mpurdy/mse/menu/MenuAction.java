@@ -10,7 +10,6 @@ import com.a0mpurdy.mse.data.bible.Bible;
 import com.a0mpurdy.mse.reader.bible.BibleTextReader;
 import com.a0mpurdy.mse.reader.hymn.HymnTextReader;
 import com.a0mpurdy.mse.data.ministry.MinistryAuthor;
-import com.a0mpurdy.mse.reader.ministry.AuthorDetails;
 import com.a0mpurdy.mse.reader.ministry.MinistryTextReader;
 import com.a0mpurdy.mse_core.data.hymn.HymnBook;
 import com.a0mpurdy.mse_core.log.ILogger;
@@ -26,60 +25,14 @@ import java.util.Scanner;
  */
 public class MenuAction {
 
-    public static void executeMenuChoice(int mainMenuChoice, Scanner sc, Config cfg) {
-        switch (mainMenuChoice) {
-            case 0:
-                System.out.println("Closing ...");
-                break;
-            case 1:
-                prepareAllFiles(sc, cfg);
-                break;
-            case 2:
-                createAllIndexes(sc, cfg);
-                break;
-            case 3:
-                createAllSerialFiles(sc);
-                System.out.println("\rSerialized all files");
-                break;
-            case 4:
-                System.out.println("Test");
-                PreparePlatform platform = chooseSystem(sc);
-                MinistryTextReader mtr = new MinistryTextReader();
-
-                ArrayList<AuthorDetails> authorDetails = new ArrayList<>();
-                authorDetails.add(new AuthorDetails("Miscellaneous", "misc", "misc"));
-                authorDetails.add(new AuthorDetails("J.N. Darby", "jnd", "jnd"));
-                authorDetails.add(new AuthorDetails("J. Taylor", "jt", "jt"));
-                authorDetails.add(new AuthorDetails("W.J. House", "wjh", "wjh"));
-
-                ArrayList<MinistryAuthor> authors = mtr.readAllMinistryAuthors(platform.getSourcePath(), authorDetails);
-                System.out.println("\rWriting authors");
-                for (MinistryAuthor author : authors) {
-                    Serializer.writeAuthor(platform.getSerialFolder(), author);
-                }
-//                Serializer.readAuthor(platform.getSerialFolder(), )
-                break;
-            case 5:
-                MenuPrinter.printMenu(MenuPrinter.Menu.OTHER);
-                doOtherMenuOption(cfg, sc.nextInt(), sc);
-                break;
-            case 6:
-                MenuPrinter.printMenu(MenuPrinter.Menu.DEBUG);
-                doDebugMenuOption(cfg, sc.nextInt(), sc);
-                break;
-            default:
-                System.out.println("Invalid choice");
-        }
-    }
-
-    private static void createAllSerialFiles(Scanner sc) {
+    protected static void createAllSerialFiles(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
 
         serializeAllHymns(platform);
         serializeAllBibles(platform);
     }
 
-    private static void serializeAllHymns(PreparePlatform platform) {
+    protected static void serializeAllHymns(PreparePlatform platform) {
         HymnTextReader htr = new HymnTextReader();
         ArrayList<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
         for (HymnBook hymnBook : hymnBooks) {
@@ -87,7 +40,7 @@ public class MenuAction {
         }
     }
 
-    private static void serializeAllBibles(PreparePlatform platform) {
+    protected static void serializeAllBibles(PreparePlatform platform) {
         BibleTextReader btr = new BibleTextReader();
         ArrayList<Bible> bibles = btr.readAll(platform.getSourcePath());
         for (Bible bible : bibles) {
@@ -103,7 +56,7 @@ public class MenuAction {
         System.out.println("Read hymns text");
     }
 
-    private static HymnBook readSerialHymn(Scanner sc) {
+    protected static HymnBook readSerialHymn(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
         return Serializer.readHymnBook(platform.getSerialFolder() + File.separator + "hymns", "hymns1962.ser");
     }
@@ -123,7 +76,7 @@ public class MenuAction {
         System.out.println("Read Misc Ministry");
     }
 
-    private static void readSingleSerialMinistryAuthor(Scanner sc) {
+    protected static void readSingleSerialMinistryAuthor(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
         MinistryAuthor fromFile = Serializer.readAuthor(platform.getSerialFolder(), "misc.ser");
     }
@@ -136,7 +89,7 @@ public class MenuAction {
         System.out.println("Created JND");
     }
 
-    private static void prepareAllFiles(Scanner sc, Config cfg) {
+    protected static void prepareAllFiles(Scanner sc, Config cfg) {
         PreparePlatform platform = chooseSystem(sc);
         if (platform != null) {
 
@@ -159,11 +112,9 @@ public class MenuAction {
         }
     }
 
-    private static void prepareSingleAuthor(Scanner sc, Config cfg) {
+    protected static void prepareSingleAuthor(Scanner sc, Config cfg) {
         System.out.println("\nWhich author do you wish to prepare?");
-        MenuPrinter.printMenu(MenuPrinter.Menu.AUTHOR);
-        int authorChoice = sc.nextInt();
-        sc.nextLine();
+        int authorChoice = AuthorMenuFactory.make().getChoice(sc);
 
         PreparePlatform platform = chooseSystem(sc);
         if (platform != null) {
@@ -181,7 +132,7 @@ public class MenuAction {
         }
     }
 
-    private static void createAllIndexes(Scanner sc, Config cfg) {
+    protected static void createAllIndexes(Scanner sc, Config cfg) {
         PreparePlatform platform = chooseSystem(sc);
         if (platform != null) {
             System.out.println("Creating all indexes ...");
@@ -197,11 +148,9 @@ public class MenuAction {
         } // end creating all indexes
     }
 
-    private static void createSingleAuthorIndex(Scanner sc, Config cfg) {
+    protected static void createSingleAuthorIndex(Scanner sc, Config cfg) {
         System.out.println("\nWhich author do you wish to index?");
-        MenuPrinter.printMenu(MenuPrinter.Menu.AUTHOR);
-        int authorChoice = sc.nextInt();
-        sc.nextLine();
+        int authorChoice = AuthorMenuFactory.make().getChoice(sc);
 
         PreparePlatform platform = chooseSystem(sc);
         if (platform != null) {
@@ -223,11 +172,9 @@ public class MenuAction {
 //        }
 //    }
 
-    private static void checkAuthorIndex(Scanner sc) {
+    protected static void checkAuthorIndex(Scanner sc) {
         System.out.println("\nWhich author index do you wish to check?");
-        MenuPrinter.printMenu(MenuPrinter.Menu.AUTHOR);
-        int authorChoice = sc.nextInt();
-        sc.nextLine();
+        int authorChoice = AuthorMenuFactory.make().getChoice(sc);
         if ((authorChoice >= 0) && (authorChoice < Author.values().length)) {
 
 
@@ -272,8 +219,7 @@ public class MenuAction {
         }
     }
 
-    private static void checkAllIndexes(Scanner sc) {
-
+    protected static void checkAllIndexes(Scanner sc) {
         // choose system to check index for
         PreparePlatform platform = chooseSystem(sc);
         if (platform != null) {
@@ -289,85 +235,13 @@ public class MenuAction {
         }
     }
 
-    private static void doOtherMenuOption(Config cfg, int option, Scanner sc) {
-        switch (option) {
-            case 0:
-                return;
-            case 1:
-                prepareSingleAuthor(sc, cfg);
-                break;
-            case 2:
-                createSingleAuthorIndex(sc, cfg);
-                break;
-            case 3:
-                System.out.println("Not currently working");
-//                createSuperIndex(sc, cfg);
-                break;
-            case 4:
-                checkAuthorIndex(sc);
-                break;
-            case 5:
-                checkAllIndexes(sc);
-                break;
-            case 6:
-                serializeAllBibles(chooseSystem(sc));
-                break;
-            case 7:
-                serializeAllHymns(chooseSystem(sc));
-                System.out.print("\rFinished reading all hymns\n");
-                break;
-            case 8:
-                HymnBook test = readSerialHymn(sc);
-                System.out.print("\rRead serial hymns\n");
-                break;
-            case 9:
-                // benchmark
-                System.out.println("Benchmarking ...\n\n");
-                new Benchmark().run();
-                break;
-            default:
-                System.out.println("Invalid choice");
-        }
-    }
-
-    private static void doDebugMenuOption(Config cfg, int option, Scanner sc) {
-        switch (option) {
-            case 0:
-                return;
-            case 1:
-                // Read single author text
-                readSingleSerialMinistryAuthor(sc);
-                break;
-            case 2:
-                // benchmark
-                System.out.println("Benchmarking ...\n\n");
-                new Benchmark().run();
-                break;
-            default:
-                System.out.println("Invalid choice");
-        }
-    }
-
-    private static PreparePlatform chooseSystem(Scanner sc) {
-
+    protected static PreparePlatform chooseSystem(Scanner sc) {
         System.out.println("\nChoose a system:");
+        int option = SystemsMenuFactory.make().getChoice(sc);
 
-        ArrayList<String> systems = new ArrayList<>();
-        systems.add("Cancel");
-        for (PreparePlatform platform : PreparePlatform.values()) {
-            systems.add(platform.getName());
-        }
+        if (option == 0) return null;
 
-        MenuPrinter.printMenu(systems);
-        int option = sc.nextInt();
-        sc.nextLine();
-
-        switch (option) {
-            case 0:
-                return null;
-            default:
-                return PreparePlatform.values()[option - 1];
-        }
+        return PreparePlatform.values()[option - 1];
     }
 
     private static void processAuthor(Author author, Config cfg, PreparePlatform platform) {
