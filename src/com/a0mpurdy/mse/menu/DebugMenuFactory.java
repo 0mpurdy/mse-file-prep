@@ -17,7 +17,7 @@ public class DebugMenuFactory {
 
         options.add(new MenuOption("Benchmark", () -> {
             System.out.println("Benchmarking ...\n\n");
-            new Benchmark().run();
+            new Benchmark(1000).run();
         }));
 
         return new Menu(options);

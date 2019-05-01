@@ -6,7 +6,6 @@ import java.util.ArrayList;
 /**
  * Created by mj_pu_000 on 07/11/2017.
  */
-
 public class HymnVerse implements Serializable {
 
     private static final long serialVersionUID = 2L;

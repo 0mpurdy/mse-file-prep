@@ -1,9 +1,24 @@
 package com.a0mpurdy.mse.processors;
 
+import com.a0mpurdy.mse.hymn.HymnTextReader;
+import com.a0mpurdy.mse_core.data.hymn.HymnBook;
+
+import java.util.List;
+
 /**
  * Created by mj_pu_000 on 10/09/2015.
  */
 public class Benchmark implements Runnable {
+
+    private int iterations;
+
+    public Benchmark(int iterations) {
+        this.iterations = iterations;
+    }
+
+    public Benchmark() {
+        this(10000000);
+    }
 
     static String[] deleteChars = {"?","\"","!",",",".","-","\'",":",
             "1","2","3","4","5","6","7","8","9","0",";","@",")","(","�","*","[","]","\u00AC","{","}","\u2019", "~",
@@ -14,29 +29,38 @@ public class Benchmark implements Runnable {
 
         long startTime = System.nanoTime();
 
-        for (int i = 0; i<10000000; i++){
-            String token = "spirit's".toUpperCase();
+        for (int i = 0; i<iterations; i++){
+            readAllHymns();
+        }
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Time: " + ((endTime - startTime) * 1e-6 + "ms"));
+
+    }
+
+    private void readAllHymns() {
+        List<HymnBook> books = new HymnTextReader().readAll("../MSE-Res-Lite/res/source/hymns/");
+    }
+
+    private void processToken() {
+        String token = "spirit's".toUpperCase();
+        if (!isAlpha(token)) {
+            token = processString(token);
+        }
+        if (!isAlpha(token)) {
+            token = processUncommonString(token);
             if (!isAlpha(token)) {
-                token = processString(token);
-            }
-            if (!isAlpha(token)) {
-                token = processUncommonString(token);
-                if (!isAlpha(token)) {
 //                    if (noErrors) {
 //                        noErrors = !noErrors;
 //                        System.out.println();
 //                    }
 //                    System.out.print("\t" + token + "\t" + volumeNumber + ":" + pageNumber);
 //                    token = "";
-                }
             }
         }
-
-        long endTime = System.nanoTime();
-
-        System.out.println("Time: " + ((endTime - startTime) / 1000000));
-
     }
+
 
     private static boolean isAlpha(String token) {
         char[] chars = token.toCharArray();

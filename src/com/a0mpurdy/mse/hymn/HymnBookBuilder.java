@@ -1,4 +1,4 @@
-package com.a0mpurdy.mse.data.hymn;
+package com.a0mpurdy.mse.hymn;
 
 import com.a0mpurdy.mse.reader.MseReaderException;
 import com.a0mpurdy.mse_core.data.hymn.HymnBook;

@@ -1,42 +1,51 @@
-package com.a0mpurdy.mse.reader.hymn;
+package com.a0mpurdy.mse.hymn;
 
-import com.a0mpurdy.mse.data.hymn.HymnBookBuilder;
-import com.a0mpurdy.mse.data.hymn.HymnBuilder;
+import com.a0mpurdy.mse.helpers.FileHelper;
 import com.a0mpurdy.mse.reader.MseReaderException;
 import com.a0mpurdy.mse_core.data.hymn.HymnBook;
 import com.a0mpurdy.mse_core.data.hymn.HymnVerse;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by mj_pu_000 on 17/03/2017.
+ *
+ * Parses text format hymn book into Java class
  */
 public class HymnTextReader {
 
     private String[] hymnBookYears = {"1903", "1932", "1951", "1962", "1973"};
 
-    public ArrayList<HymnBook> readAll(String folder) {
-        ArrayList<HymnBook> hymnBooks = new ArrayList<>();
-        for (String hymnBookYear : hymnBookYears) {
-            hymnBooks.add(readHymnBook(folder, "hymns" + hymnBookYear));
-        }
-        return hymnBooks;
+    /**
+     * Create a list of all the hymnbooks within a folder
+     * @param folder
+     * @return
+     */
+    public List<HymnBook> readAll(String folder) {
+        return FileHelper.getFiles(folder)
+                .map(this::readHymnBook)
+                .collect(Collectors.toList());
     }
 
     public HymnBook readHymnBook(String folder, String filename) {
+        return readHymnBook(new File(folder + File.separator + filename));
+    }
 
-        HymnBookBuilder hymnBook = new HymnBookBuilder(null, filename, null);
+    public HymnBook readHymnBook(File hymnBookFile) {
+
+        HymnBookBuilder hymnBook = new HymnBookBuilder(null, hymnBookFile.getName(), null);
 
         System.out.print("Preparing Hymns");
 
         try {
 
-            String filePath = folder + File.separator + filename + ".txt";
-            System.out.print("\r\tPreparing " + filePath);
+            System.out.print("\r\tPreparing " + hymnBookFile.getAbsolutePath());
 
             // make the reader
-            BufferedReader brHymns = new BufferedReader(new FileReader(filePath));
+            BufferedReader brHymns = new BufferedReader(new FileReader(hymnBookFile));
 
             // read the first line of the hymn book
             String line = brHymns.readLine();
@@ -75,6 +84,25 @@ public class HymnTextReader {
         return hymnBook.asHymnBook();
     }
 
+    /**
+     * Parse the next line of the hymn
+     * Lines can be in the following format:
+     *
+     * 1) {17}
+     * 2) |2|
+     * 3) Some text
+     *
+     * In case 1, this is a new hymn
+     * In case 2, this is a new verse
+     * In case 3, it is the next line in the verse
+     *
+     * @param line The line to parse
+     * @param currentVerse The current verse being processed
+     * @param brHymns The reader for the file
+     * @return The verse after it has been updated with the current line
+     * @throws IOException
+     * @throws MseReaderException If an invalid format is detected
+     */
     private HymnVerse parseLine(String line, HymnVerse currentVerse, BufferedReader brHymns) throws IOException, MseReaderException {
 
         // if it is a new hymn
@@ -98,19 +126,12 @@ public class HymnTextReader {
         } else if (line.indexOf("|") == 0) {
             // if it is a new verse
 
-//            if (currentVerse.getParentHymn().getNumber() == 83) {
-//                System.out.println("This one");
-//            }
-//            if (currentVerse.getParentHymn().getNumber() == 149) {
-//                System.out.println("This one");
-//            }
-
             try {
                 // get the verse number
                 int verseNumber = getVerseNumberFromLine(line);
 
                 // start a new verse (unless verse 1 which is created when creating a new hymn)
-                if (verseNumber > 1) {
+                if (verseNumber != 1) {
                     currentVerse = HymnBuilder.createNewVerse(currentVerse.getParentHymn(), verseNumber);
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
@@ -125,14 +146,29 @@ public class HymnTextReader {
         return currentVerse;
     }
 
+    /**
+     * Extract a title from a line
+     * @param line Line containing a title for a hymn book
+     * @return
+     */
     private String getTitleFromLine(String line) {
         return line.substring(line.indexOf("#") + 1, line.length() - 1);
     }
 
+    /**
+     * Extract a hymn number from a line
+     * @param line Line containing a hymn number
+     * @return
+     */
     private int getHymnNumberFromLine(String line) {
         return Integer.parseInt(line.substring(1, line.length() - 1));
     }
 
+    /**
+     * Extract a meter from a line
+     * @param line Line containing a meter
+     * @return
+     */
     private String getMeterFromLine(String line) {
         // split the line by the comma and extract the info
         String[] info = line.split(",");
@@ -142,6 +178,11 @@ public class HymnTextReader {
         return null;
     }
 
+    /**
+     * Parse a hymn book author from a line
+     * @param line Line containing a hymn book author
+     * @return
+     */
     private String getAuthorFromLine(String line) {
         // split the line by the comma and extract the info
         String[] info = line.split(",");
@@ -151,6 +192,13 @@ public class HymnTextReader {
         return null;
     }
 
+    /**
+     * Extract a verse number from a line
+     * @param line Line containing a verse number
+     * @return
+     * @throws NumberFormatException
+     * @throws StringIndexOutOfBoundsException
+     */
     private int getVerseNumberFromLine(String line) throws NumberFormatException, StringIndexOutOfBoundsException {
         return Integer.parseInt(line.substring(1, line.lastIndexOf('|')));
     }

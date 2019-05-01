@@ -8,17 +8,14 @@ import com.a0mpurdy.mse.helpers.Serializer;
 import com.a0mpurdy.mse.processors.*;
 import com.a0mpurdy.mse.data.bible.Bible;
 import com.a0mpurdy.mse.reader.bible.BibleTextReader;
-import com.a0mpurdy.mse.reader.hymn.HymnTextReader;
+import com.a0mpurdy.mse.hymn.HymnTextReader;
 import com.a0mpurdy.mse.data.ministry.MinistryAuthor;
 import com.a0mpurdy.mse.reader.ministry.MinistryTextReader;
 import com.a0mpurdy.mse_core.data.hymn.HymnBook;
 import com.a0mpurdy.mse_core.log.ILogger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Michael Purdy on 27/10/2016.
@@ -34,7 +31,7 @@ public class MenuAction {
 
     protected static void serializeAllHymns(PreparePlatform platform) {
         HymnTextReader htr = new HymnTextReader();
-        ArrayList<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
+        List<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
         for (HymnBook hymnBook : hymnBooks) {
             Serializer.writeHymnBook(platform.getSerialFolder() + File.separator + "hymns", hymnBook);
         }

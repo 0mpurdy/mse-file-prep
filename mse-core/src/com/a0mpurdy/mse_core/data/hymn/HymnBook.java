@@ -1,5 +1,7 @@
 package com.a0mpurdy.mse_core.data.hymn;
 
+import com.a0mpurdy.mse_core.data.IBook;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -8,13 +10,20 @@ import java.util.ArrayList;
  *
  * @author MichaelPurdy
  */
-public class HymnBook implements Serializable, IHymnBook {
+public class HymnBook implements Serializable, IBook {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
+    /**
+     * Title of the hymn book
+     */
     private String title;
     private String filename;
     private String code;
+
+    /**
+     * List of hymns in the book
+     */
     private ArrayList<Hymn> hymns;
 
     public HymnBook(String title, String filename, String code, ArrayList<Hymn> hymns) {
@@ -40,15 +49,18 @@ public class HymnBook implements Serializable, IHymnBook {
         return code;
     }
 
-    public String getShortDescription() {
-        return this.title;
+    public String getFilename() {
+        int suffixIndex = filename.indexOf(".");
+        if (suffixIndex > 0) {
+            return filename.substring(0, suffixIndex);
+        }
+        return filename;
     }
 
     public String getSerializedName() {
-        return filename + ".ser";
+        return getFilename() + ".ser";
     }
 
-    @Override
     public int getNumHymns() {
         return hymns.size();
     }
@@ -68,4 +80,15 @@ public class HymnBook implements Serializable, IHymnBook {
     public void addHymn(Hymn hymn) {
         this.hymns.add(hymn);
     }
+
+    @Override
+    public String getShortDescription() {
+        return this.title;
+    }
+
+    @Override
+    public String getAuthor() {
+        return "Hymnbooks have no author.";
+    }
+
 }

@@ -7,12 +7,27 @@ import com.a0mpurdy.mse.data.author.IAuthor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Michael Purdy
  *         Helps to generate links and folder paths
  */
 public abstract class FileHelper {
+
+    /**
+     * Get all of the file names within a folder
+     * @param path Folder to get the filenames from
+     * @return
+     */
+    public static Stream<File> getFiles(String path) {
+        return Arrays.stream(new File(path).listFiles())
+                .parallel()
+                .filter(File::isFile);
+    }
 
     /**
      * Get the path to the source folder of an author, relative to the res directory
