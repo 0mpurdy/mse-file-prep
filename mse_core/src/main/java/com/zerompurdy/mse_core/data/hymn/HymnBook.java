@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class HymnBook implements Serializable, IBook {
 
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     /**
      * Title of the hymn book

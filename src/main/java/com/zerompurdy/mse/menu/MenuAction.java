@@ -6,7 +6,7 @@ import com.zerompurdy.mse.data.author.AuthorIndex;
 import com.zerompurdy.mse.data.bible.Bible;
 import com.zerompurdy.mse.data.ministry.MinistryAuthor;
 import com.zerompurdy.mse.helpers.Serializer;
-import com.zerompurdy.mse.hymn.HymnTextReader;
+import com.zerompurdy.mse.parser.HymnParser;
 import com.zerompurdy.mse.olddata.PreparePlatform;
 import com.zerompurdy.mse.processors.*;
 import com.zerompurdy.mse.reader.bible.BibleTextReader;
@@ -30,7 +30,7 @@ public class MenuAction {
     }
 
     protected static void serializeAllHymns(PreparePlatform platform) {
-        HymnTextReader htr = new HymnTextReader();
+        HymnParser htr = new HymnParser();
         List<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
         for (HymnBook hymnBook : hymnBooks) {
             Serializer.writeHymnBook(platform.getSerialFolder() + File.separator + "hymns", hymnBook);
@@ -47,8 +47,8 @@ public class MenuAction {
 
     private static void readHymnText(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
-        HymnTextReader hymnTextReader = new HymnTextReader();
-        HymnBook hymnBook = hymnTextReader.readHymnBook(platform.getSourcePath() + File.separator + "hymns", "hymns1962");
+        HymnParser hymnParser = new HymnParser();
+        HymnBook hymnBook = hymnParser.readHymnBook(platform.getSourcePath() + File.separator + "hymns", "hymns1962");
         Serializer.writeHymnBook(platform.getSerialFolder() + File.separator + "hymns", hymnBook);
         System.out.println("Read hymns text");
     }

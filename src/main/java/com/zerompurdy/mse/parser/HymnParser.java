@@ -1,7 +1,8 @@
-package com.zerompurdy.mse.hymn;
+package com.zerompurdy.mse.parser;
 
 import com.zerompurdy.mse.helpers.FileHelper;
 import com.zerompurdy.mse.reader.MseReaderException;
+import com.zerompurdy.mse_core.data.hymn.Hymn;
 import com.zerompurdy.mse_core.data.hymn.HymnBook;
 import com.zerompurdy.mse_core.data.hymn.HymnVerse;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * Parses text format hymn book into Java class
  */
-public class HymnTextReader {
+public class HymnParser {
 
     private String[] hymnBookYears = {"1903", "1932", "1951", "1962", "1973"};
 
@@ -38,7 +39,7 @@ public class HymnTextReader {
 
     public HymnBook readHymnBook(File hymnBookFile) {
 
-        HymnBookBuilder hymnBook = new HymnBookBuilder(null, hymnBookFile.getName(), null);
+        HymnBook hymnBook = new HymnBook(null, hymnBookFile.getName(), null);
 
         System.out.print("Preparing Hymns");
 
@@ -56,7 +57,8 @@ public class HymnTextReader {
             hymnBook.setTitle(getTitleFromLine(line));
 
             // create the first verse to pass in
-            HymnVerse currentVerse = hymnBook.createNewHymn(1, "invalid", "invalid").createNewVerse(1);
+            Hymn firstHymn = createNewHymn(hymnBook, 1, "invalid", "invalid");
+            HymnVerse currentVerse = createNewVerse(firstHymn, 1);
 
             // read the second line of the hymn book
             line = brHymns.readLine();
@@ -83,7 +85,7 @@ public class HymnTextReader {
             System.out.println(e.getMessage());
         }
 
-        return hymnBook.asHymnBook();
+        return hymnBook;
     }
 
     /**
@@ -122,7 +124,8 @@ public class HymnTextReader {
 
             // create new Hymn
             if (hymnNumber > 1) {
-                currentVerse = HymnBookBuilder.createNewHymn(currentVerse.getParentHymn().getParentHymnBook(), hymnNumber, author, meter).createNewVerse(1);
+                Hymn nextHymn = createNewHymn(currentVerse.getParentHymn().getParentHymnBook(), hymnNumber, author, meter);
+                currentVerse = createNewVerse(nextHymn, 1);
             }
 
         } else if (line.indexOf("|") == 0) {
@@ -134,7 +137,7 @@ public class HymnTextReader {
 
                 // start a new verse (unless verse 1 which is created when creating a new hymn)
                 if (verseNumber != 1) {
-                    currentVerse = HymnBuilder.createNewVerse(currentVerse.getParentHymn(), verseNumber);
+                    currentVerse = createNewVerse(currentVerse.getParentHymn(), verseNumber);
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                 throw new MseReaderException("Could not format new verse number \"" + line + "\" after " + currentVerse.getShortDescription());
@@ -203,6 +206,40 @@ public class HymnTextReader {
      */
     private int getVerseNumberFromLine(String line) throws NumberFormatException, StringIndexOutOfBoundsException {
         return Integer.parseInt(line.substring(1, line.lastIndexOf('|')));
+    }
+
+    public static Hymn createNewHymn(HymnBook hymnBook, int hymnNumber, String author, String meter) throws MseReaderException {
+        if (hymnNumber != hymnBook.getHymns().size() + 1) {
+            throw new MseReaderException("Unexpected hymn number " + hymnBook.getShortDescription() +
+                    " got " + hymnNumber + " expected " +
+                    hymnBook.getHymns().size() + 1);
+        }
+        Hymn nextHymn = new Hymn(hymnBook, hymnNumber, author, meter);
+        hymnBook.addHymn(nextHymn);
+        return nextHymn;
+    }
+
+    /**
+     * Add a new verse to a hymn
+     * @param hymn
+     * @param verseNumber
+     * @return
+     * @throws MseReaderException
+     */
+    private HymnVerse createNewVerse(Hymn hymn, int verseNumber) throws MseReaderException {
+        if (verseNumber == -1) {
+            HymnVerse chorus = new HymnVerse(hymn, -1);
+            hymn.setChorus(chorus);
+            return chorus;
+        }
+        if (verseNumber != hymn.getVerses().size() + 1) {
+            throw new MseReaderException("Unexpected verse number " +
+                    hymn.getShortDescription() + " got " +
+                    verseNumber + " expected " + hymn.getVerses().size() + 1);
+        }
+        HymnVerse nextVerse = new HymnVerse(hymn, verseNumber);
+        hymn.addVerse(nextVerse);
+        return nextVerse;
     }
 
 }

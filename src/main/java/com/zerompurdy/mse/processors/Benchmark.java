@@ -1,6 +1,6 @@
 package com.zerompurdy.mse.processors;
 
-import com.zerompurdy.mse.hymn.HymnTextReader;
+import com.zerompurdy.mse.parser.HymnParser;
 import com.zerompurdy.mse_core.data.hymn.HymnBook;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class Benchmark implements Runnable {
     }
 
     private void readAllHymns() {
-        List<HymnBook> books = new HymnTextReader().readAll("../MSE-Res-Lite/res/source/hymns/");
+        List<HymnBook> books = new HymnParser().readAll("../MSE-Res-Lite/res/source/hymns/");
     }
 
     private void processToken() {
