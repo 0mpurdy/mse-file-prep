@@ -37,3 +37,7 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle
 .idea/workspace.xml
+
+.idea/
+mse_core/build/
+mse-file-prep.iml
