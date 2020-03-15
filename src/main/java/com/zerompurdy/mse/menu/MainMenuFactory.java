@@ -31,8 +31,8 @@ public class MainMenuFactory {
         }));
 
         options.add(new MenuOption("Create all serial files", () -> {
-            MenuAction.createAllSerialFiles(sc);
-            System.out.println("\rSerialized all files");
+            long nanoseconds = MenuAction.createAllSerialFiles(sc);
+            System.out.println(String.format("\rSerialized all files: %.2fs", (nanoseconds / 1e9)));
         }));
 
         options.add(new MenuOption("Test", () -> {

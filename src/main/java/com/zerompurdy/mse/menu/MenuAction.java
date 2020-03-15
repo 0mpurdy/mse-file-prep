@@ -22,11 +22,20 @@ import java.util.*;
  */
 public class MenuAction {
 
-    protected static void createAllSerialFiles(Scanner sc) {
+    /**
+     * Create the serialised version of all supported files
+     * @param sc
+     * @return total nanoseconds to perform the serialisation.
+     */
+    protected static long createAllSerialFiles(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
+
+        long start = System.nanoTime();
 
         serializeAllHymns(platform);
         serializeAllBibles(platform);
+
+        return System.nanoTime() - start;
     }
 
     protected static void serializeAllHymns(PreparePlatform platform) {
