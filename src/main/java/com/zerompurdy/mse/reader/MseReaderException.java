@@ -8,4 +8,8 @@ public class MseReaderException extends Exception {
     public MseReaderException(String message) {
         super(message);
     }
+
+    public MseReaderException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -1,4 +1,4 @@
-package com.zerompurdy.mse.data.bible;
+package com.zerompurdy.mse_core.data.bible;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
  * @author Michael Purdy
  */
 public class Bible implements Serializable {
+
+    private static final long serialVersionUID = 4L;
 
     private String name;
     private String author;

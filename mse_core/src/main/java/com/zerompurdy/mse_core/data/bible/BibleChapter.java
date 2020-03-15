@@ -1,6 +1,4 @@
-package com.zerompurdy.mse.data.bible;
-
-import com.zerompurdy.mse.reader.MseReaderException;
+package com.zerompurdy.mse_core.data.bible;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +7,8 @@ import java.util.ArrayList;
  * Created by mj_pu_000 on 17/03/2017.
  */
 public class BibleChapter implements Serializable {
+
+    private static final long serialVersionUID = 4L;
 
     private BibleBook parentBibleBook;
     private int chapter;
@@ -24,9 +24,9 @@ public class BibleChapter implements Serializable {
         return parentBibleBook.getShortDescription() + ":" + chapter;
     }
 
-    public BibleVerse createVerse(int verse, String content) throws MseReaderException {
+    public BibleVerse createVerse(int verse, String content) throws IllegalArgumentException {
         if (verse != this.verses.size() + 1) {
-            throw new MseReaderException("Verse numbers don't match up " + getShortDescription() + " expected " + this.verses.size() + 1 + " got " + verse);
+            throw new IllegalArgumentException("Verse numbers don't match up " + getShortDescription() + " expected " + this.verses.size() + 1 + " got " + verse);
         }
         BibleVerse nextVerse = new BibleVerse(this, verse, content);
         this.verses.add(nextVerse);

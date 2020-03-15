@@ -1,6 +1,6 @@
 package com.zerompurdy.mse.helpers;
 
-import com.zerompurdy.mse.data.bible.Bible;
+import com.zerompurdy.mse_core.data.bible.Bible;
 import com.zerompurdy.mse.data.ministry.MinistryAuthor;
 import com.zerompurdy.mse_core.data.hymn.HymnBook;
 

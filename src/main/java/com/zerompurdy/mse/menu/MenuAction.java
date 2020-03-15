@@ -3,7 +3,7 @@ package com.zerompurdy.mse.menu;
 import com.zerompurdy.mse.common.config.Config;
 import com.zerompurdy.mse.data.author.Author;
 import com.zerompurdy.mse.data.author.AuthorIndex;
-import com.zerompurdy.mse.data.bible.Bible;
+import com.zerompurdy.mse_core.data.bible.Bible;
 import com.zerompurdy.mse.data.ministry.MinistryAuthor;
 import com.zerompurdy.mse.helpers.Serializer;
 import com.zerompurdy.mse.parser.HymnParser;

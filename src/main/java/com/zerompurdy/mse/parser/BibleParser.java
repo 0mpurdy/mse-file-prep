@@ -1,7 +1,7 @@
 package com.zerompurdy.mse.parser;
 
-import com.zerompurdy.mse.data.bible.Bible;
-import com.zerompurdy.mse.data.bible.BibleBook;
+import com.zerompurdy.mse_core.data.bible.Bible;
+import com.zerompurdy.mse_core.data.bible.BibleBook;
 import com.zerompurdy.mse.reader.MseReaderException;
 
 import java.io.BufferedReader;
@@ -121,7 +121,12 @@ public class BibleParser {
 
             // start new chapter
             int chapter = getChapterFromLine(line);
-            currentBook.createNewChapter(chapter);
+
+            try {
+                currentBook.createNewChapter(chapter);
+            } catch (IllegalArgumentException e ){
+                throw new MseReaderException(e.getMessage(), e);
+            }
 
         } else {
             // if it is a verse
@@ -132,7 +137,11 @@ public class BibleParser {
             // from first space to end is verse text
             String verse = line.substring(line.indexOf(" ")).trim();
 
-            currentBook.getLastChapter().createVerse(verseNumber, line);
+            try {
+                currentBook.getLastChapter().createVerse(verseNumber, line);
+            } catch (IllegalArgumentException e ){
+                throw new MseReaderException(e.getMessage(), e);
+            }
         }
     }
 
