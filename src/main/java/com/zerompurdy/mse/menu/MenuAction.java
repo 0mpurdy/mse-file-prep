@@ -9,7 +9,7 @@ import com.zerompurdy.mse.helpers.Serializer;
 import com.zerompurdy.mse.parser.HymnParser;
 import com.zerompurdy.mse.olddata.PreparePlatform;
 import com.zerompurdy.mse.processors.*;
-import com.zerompurdy.mse.reader.bible.BibleTextReader;
+import com.zerompurdy.mse.parser.BibleParser;
 import com.zerompurdy.mse.reader.ministry.MinistryTextReader;
 import com.zerompurdy.mse_core.data.hymn.HymnBook;
 import com.zerompurdy.mse_core.log.ILogger;
@@ -47,7 +47,7 @@ public class MenuAction {
     }
 
     protected static void serializeAllBibles(PreparePlatform platform) {
-        BibleTextReader btr = new BibleTextReader();
+        BibleParser btr = new BibleParser();
         ArrayList<Bible> bibles = btr.readAll(platform.getSourcePath());
         for (Bible bible : bibles) {
             Serializer.writeBible(platform.getSerialFolder(), bible);
@@ -89,8 +89,8 @@ public class MenuAction {
 
     private static void readJndBibleText(Scanner sc) {
         PreparePlatform platform = chooseSystem(sc);
-        BibleTextReader bibleTextReader = new BibleTextReader();
-        Bible jndBible = bibleTextReader.readVersion("JND Bible", "JND", "jnd", "bible", platform.getSourcePath() + File.separator + "bible");
+        BibleParser bibleParser = new BibleParser();
+        Bible jndBible = bibleParser.readVersion("JND Bible", "JND", "jnd", "bible", platform.getSourcePath() + File.separator + "bible");
         Serializer.writeBible(platform.getSerialFolder(), jndBible);
         System.out.println("Created JND");
     }

@@ -1,4 +1,4 @@
-package com.zerompurdy.mse.reader.bible;
+package com.zerompurdy.mse.parser;
 
 /**
  * Created by mj_pu_000 on 17/03/2017.

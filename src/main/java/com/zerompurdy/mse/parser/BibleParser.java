@@ -1,4 +1,4 @@
-package com.zerompurdy.mse.reader.bible;
+package com.zerompurdy.mse.parser;
 
 import com.zerompurdy.mse.data.bible.Bible;
 import com.zerompurdy.mse.data.bible.BibleBook;
@@ -15,9 +15,7 @@ import java.util.ArrayList;
  *
  * @author Michael Purdy
  */
-public class BibleTextReader {
-
-
+public class BibleParser {
 
     private String[] bookNames = {"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
             "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings",
