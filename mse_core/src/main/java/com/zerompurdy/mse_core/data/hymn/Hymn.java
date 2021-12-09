@@ -1,7 +1,12 @@
 package com.zerompurdy.mse_core.data.hymn;
 
+import com.zerompurdy.mse_core.dto.hymn.HymnDto;
+import com.zerompurdy.mse_core.dto.hymn.HymnVerseDto;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Hymn
@@ -62,5 +67,19 @@ public class Hymn implements Serializable {
 
     public void addVerse(HymnVerse verse) {
         this.verses.add(verse);
+    }
+
+    public HymnDto toDto() {
+        Collection<HymnVerseDto> dtoVerses = this.verses.stream().map(x -> x.toDto()).collect(Collectors.toList());
+        HymnVerseDto chorusDto = this.chorus != null
+            ? this.chorus.toDto()
+            : null;
+
+        return new HymnDto(
+            this.number,
+            this.author,
+            this.meter,
+            dtoVerses,
+            chorusDto);
     }
 }

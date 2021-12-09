@@ -1,9 +1,11 @@
 package com.zerompurdy.mse_core.data.hymn;
 
 import com.zerompurdy.mse_core.data.IBook;
+import com.zerompurdy.mse_core.dto.hymn.HymnBookDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Hymn book
@@ -91,4 +93,11 @@ public class HymnBook implements Serializable, IBook {
         return "Hymnbooks have no author.";
     }
 
+    public HymnBookDto toDto() {
+        return new HymnBookDto(
+            this.title,
+            this.filename,
+            this.code,
+            this.hymns.stream().map(x -> x.toDto()).collect(Collectors.toList()));
+    }
 }

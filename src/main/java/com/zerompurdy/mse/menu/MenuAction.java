@@ -1,5 +1,6 @@
 package com.zerompurdy.mse.menu;
 
+import com.google.gson.Gson;
 import com.zerompurdy.mse.common.config.Config;
 import com.zerompurdy.mse.data.author.Author;
 import com.zerompurdy.mse.data.author.AuthorIndex;
@@ -12,6 +13,7 @@ import com.zerompurdy.mse.processors.*;
 import com.zerompurdy.mse.parser.BibleParser;
 import com.zerompurdy.mse.reader.ministry.MinistryTextReader;
 import com.zerompurdy.mse_core.data.hymn.HymnBook;
+import com.zerompurdy.mse_core.dto.hymn.HymnBookDto;
 import com.zerompurdy.mse_core.log.ILogger;
 
 import java.io.*;
@@ -394,4 +396,43 @@ public class MenuAction {
         return result;
     }
 
+    /**
+     * Create the JSON version of all supported files
+     * @param sc
+     * @return total nanoseconds to perform the serialisation.
+     */
+    protected static long createAllJsonFiles(Scanner sc) {
+        PreparePlatform platform = chooseSystem(sc);
+
+        long start = System.nanoTime();
+
+        Gson gson = new Gson();
+
+        // write JSON hymns
+        HymnParser htr = new HymnParser();
+        List<HymnBook> hymnBooks = htr.readAll(platform.getSourcePath() + File.separator + "hymns");
+        for (HymnBook hymnBook : hymnBooks) {
+            try {
+                HymnBookDto dto = hymnBook.toDto();
+                String hymnJson = gson.toJson(dto);
+
+                String outputPath = platform.getResDir() + File.separator + "json";
+                File f = new File(outputPath);
+                if (f.mkdirs()) {
+                    System.out.print("\rCreated folder " + "json");
+                }
+                String outputFileName = outputPath + File.separator + hymnBook.getFilename() + ".json";
+
+                PrintWriter printOut = new PrintWriter(outputFileName);
+                printOut.write(hymnJson);
+                printOut.flush();
+                printOut.close();
+                System.out.printf("\rSaved json " + hymnBook.getShortDescription() + " in " + outputFileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return System.nanoTime() - start;
+    }
 }

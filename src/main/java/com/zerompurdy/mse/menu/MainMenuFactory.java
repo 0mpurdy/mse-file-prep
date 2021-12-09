@@ -35,6 +35,11 @@ public class MainMenuFactory {
             System.out.println(String.format("\rSerialized all files: %.2fs", (nanoseconds / 1e9)));
         }));
 
+        options.add(new MenuOption("Create JSON", () -> {
+            long nanoseconds = MenuAction.createAllJsonFiles(sc);
+            System.out.println(String.format("\rSerialized all files: %.2fs", (nanoseconds / 1e9)));
+        }));
+
         options.add(new MenuOption("Test", () -> {
             System.out.println("Test");
             PreparePlatform platform = chooseSystem(sc);

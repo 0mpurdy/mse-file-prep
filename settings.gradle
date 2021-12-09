@@ -1,4 +1,4 @@
 rootProject.name = 'mse-file-prep'
 
-include 'mse_core'
-
+include('mse_core')
+include('main')

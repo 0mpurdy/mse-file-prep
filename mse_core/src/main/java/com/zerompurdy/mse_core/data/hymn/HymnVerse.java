@@ -1,5 +1,7 @@
 package com.zerompurdy.mse_core.data.hymn;
 
+import com.zerompurdy.mse_core.dto.hymn.HymnVerseDto;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -43,5 +45,9 @@ public class HymnVerse implements Serializable {
 
     public void addLine(String line) {
         this.lines.add(line);
+    }
+
+    public HymnVerseDto toDto() {
+        return new HymnVerseDto(this.verseNumber, this.lines);
     }
 }
