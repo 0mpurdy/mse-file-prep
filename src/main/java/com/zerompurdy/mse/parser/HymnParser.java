@@ -57,7 +57,7 @@ public class HymnParser {
             hymnBook.setTitle(getTitleFromLine(line));
 
             // create the first verse to pass in
-            Hymn firstHymn = createNewHymn(hymnBook, 1, "invalid", "invalid");
+            Hymn firstHymn = createFirstHymn(brHymns, hymnBook);
             HymnVerse currentVerse = createNewVerse(firstHymn, 1);
 
             // read the second line of the hymn book
@@ -86,6 +86,19 @@ public class HymnParser {
         }
 
         return hymnBook;
+    }
+
+    private Hymn createFirstHymn(BufferedReader brHymns, HymnBook hymnBook) throws IOException, MseReaderException {
+        // skip the hymn number, it can be assumed to be 1
+        String line = brHymns.readLine();
+
+        // read author/meter line
+        line = brHymns.readLine();
+
+        String firstAuthor = getAuthorFromLine(line);
+        String firstMeter = getMeterFromLine(line);
+
+        return createNewHymn(hymnBook, 1, firstAuthor, firstMeter);
     }
 
     /**
